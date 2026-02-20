@@ -1,0 +1,379 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.4617713439,
+          36.3149167927
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "DJ",
+        "local_name": "충청권",
+        "spot_code": "E13011001",
+        "spot_name": "판암동 아름다운교회",
+        "div_name": "대전광역시 동구 판암동",
+        "legl_sect_code": "가",
+        "use_sect_name": "녹지지역",
+        "tm_loc_x": 241,
+        "tm_loc_y": 313
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.3825780957,
+          36.3101714214
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "DJ",
+        "local_name": "충청권",
+        "spot_code": "E13017001",
+        "spot_name": "도마동 효성타운",
+        "div_name": "대전광역시 서구 도마동",
+        "legl_sect_code": "가",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 234,
+        "tm_loc_y": 313
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.419787727,
+          36.380398987
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "DJ",
+        "local_name": "충청권",
+        "spot_code": "E13023001",
+        "spot_name": "읍내동 백송아파트",
+        "div_name": "대전광역시 대덕구 읍내동",
+        "legl_sect_code": "가",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 237,
+        "tm_loc_y": 320
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.4237933158,
+          36.3787964743
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "DJ",
+        "local_name": "충청권",
+        "spot_code": "E13023002",
+        "spot_name": "읍내동 현대아파트",
+        "div_name": "대전광역시 대덕구 읍내동",
+        "legl_sect_code": "가",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 238,
+        "tm_loc_y": 320
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.416903858,
+          36.4468632713
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "DJ",
+        "local_name": "충청권",
+        "spot_code": "E13023003",
+        "spot_name": "덕암동",
+        "div_name": "대전광역시 대덕구 덕암동",
+        "legl_sect_code": "가",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 237,
+        "tm_loc_y": 328
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.3268,
+          36.48288
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "DJ",
+        "local_name": "충청권",
+        "spot_code": "E13611001",
+        "spot_name": "황용고가_시작점",
+        "div_name": "세종특별자치시 금남면 황용리",
+        "legl_sect_code": "가",
+        "use_sect_name": "녹지지역",
+        "tm_loc_x": 431677,
+        "tm_loc_y": 229292
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0982531,
+          37.6020241
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "SU",
+        "local_name": "수도권",
+        "spot_code": "E11126001",
+        "spot_name": "신내 삼현빌라",
+        "div_name": "서울특별시 중랑구 신내동",
+        "legl_sect_code": "가",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 205762,
+        "tm_loc_y": 557544
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.897120154,
+          37.5117714311
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "SU",
+        "local_name": "수도권",
+        "spot_code": "E11156001",
+        "spot_name": "영등포 센터플러스",
+        "div_name": "서울특별시 영등포구 문래동1가",
+        "legl_sect_code": "나",
+        "use_sect_name": "철도도로_준공업지역",
+        "tm_loc_x": 279317,
+        "tm_loc_y": 546189
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.5388,
+          37.51967
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "SU",
+        "local_name": "수도권",
+        "spot_code": "E12811001",
+        "spot_name": "논골경로당",
+        "div_name": "인천광역시 중구",
+        "legl_sect_code": "가",
+        "use_sect_name": "녹지지역",
+        "tm_loc_x": 159237,
+        "tm_loc_y": 546788
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.8193205,
+          37.4892636
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "SU",
+        "local_name": "수도권",
+        "spot_code": "E12823001",
+        "spot_name": "부평 덕성빌라",
+        "div_name": "인천광역시 부평구 부개동",
+        "legl_sect_code": "가",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 184010,
+        "tm_loc_y": 543329
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.047022284,
+          37.7197612164
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "SU",
+        "local_name": "수도권",
+        "spot_code": "E14115001",
+        "spot_name": "심청이요양원",
+        "div_name": "경기도 의정부시 호원동",
+        "legl_sect_code": "가",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 204,
+        "tm_loc_y": 469
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.915213744028,
+          37.4104226637893
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "SU",
+        "local_name": "수도권",
+        "spot_code": "E14117111",
+        "spot_name": "신세계 고대광실",
+        "div_name": "경기도 안양시 만안구 안양동",
+        "legl_sect_code": "가",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 192496,
+        "tm_loc_y": 534561
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.7614999548,
+          37.687110863
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "SU",
+        "local_name": "수도권",
+        "spot_code": "E14128001",
+        "spot_name": "고양 동문아파트",
+        "div_name": "경기도 고양시 일산서구 일산동",
+        "legl_sect_code": "가",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 178895,
+        "tm_loc_y": 464995
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.2139660701,
+          37.5847110139
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "SU",
+        "local_name": "수도권",
+        "spot_code": "E14136001",
+        "spot_name": "덕소 롯데마트",
+        "div_name": "경기도 남양주시 와부읍 덕소리",
+        "legl_sect_code": "가",
+        "use_sect_name": "녹지지역",
+        "tm_loc_x": 219,
+        "tm_loc_y": 454
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.05042062770536,
+          37.16188055874134
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "SU",
+        "local_name": "수도권",
+        "spot_code": "E14137001",
+        "spot_name": "오산 우성타운",
+        "div_name": "경기도 오산시 궐동",
+        "legl_sect_code": "가",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 204409,
+        "tm_loc_y": 406675
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0351284933,
+          37.2038227924
+        ]
+      },
+      "properties": {
+        "noise_type": "R",
+        "noise_type_name": "도로교통소음",
+        "local_code": "SU",
+        "local_name": "수도권",
+        "spot_code": "E14159001",
+        "spot_name": "병점 청록빌라트",
+        "div_name": "경기도 화성시 병점동",
+        "legl_sect_code": "가",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 203,
+        "tm_loc_y": 412
+      }
+    }
+  ]
+}

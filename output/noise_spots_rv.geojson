@@ -1,0 +1,1069 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.9435300323,
+          37.3473679004
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "WJ",
+        "local_name": "강원원주시",
+        "spot_code": "F14213001",
+        "spot_name": "까치부동산",
+        "div_name": "강원특별자치도 원주시 일산동",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 283534.45,
+        "tm_loc_y": 427674.81
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.9435928253,
+          37.3343075457
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "WJ",
+        "local_name": "강원원주시",
+        "spot_code": "F14213002",
+        "spot_name": "동원주새마을금고",
+        "div_name": "강원특별자치도 원주시 명륜동",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 283554.45,
+        "tm_loc_y": 426225.31
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.95096008638662,
+          37.34994397949577
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "WJ",
+        "local_name": "강원원주시",
+        "spot_code": "F14213003",
+        "spot_name": "국민은행 앞",
+        "div_name": "강원특별자치도 원주시 중앙동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 107083,
+        "tm_loc_y": 528383
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.9468161955,
+          37.3511393933
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "WJ",
+        "local_name": "강원원주시",
+        "spot_code": "F14213004",
+        "spot_name": "원주보건소 옆",
+        "div_name": "강원특별자치도 원주시 일산동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 106663,
+        "tm_loc_y": 528488
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.941643375031,
+          37.3743944925024
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "WJ",
+        "local_name": "강원원주시",
+        "spot_code": "F14213005",
+        "spot_name": "한일전기 앞",
+        "div_name": "강원특별자치도 원주시 우산동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 283337.454,
+        "tm_loc_y": 430672.809
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.9390335446,
+          37.3787804532
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "WJ",
+        "local_name": "강원원주시",
+        "spot_code": "F14213006",
+        "spot_name": "농협사료",
+        "div_name": "강원특별자치도 원주시 우산동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 283101.45,
+        "tm_loc_y": 431157.31
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9247899053596,
+          35.14483578823781
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "GJ",
+        "local_name": "광주광역시",
+        "spot_code": "F12911001",
+        "spot_name": "조대입구 서석새마을금고 앞",
+        "div_name": "광주광역시 동구 서석동",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 193070.154,
+        "tm_loc_y": 182859.806
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9310432262,
+          35.1529473467
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "GJ",
+        "local_name": "광주광역시",
+        "spot_code": "F12911002",
+        "spot_name": "산수오거리 제주물항 앞",
+        "div_name": "광주광역시 동구 산수동",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 193640.65,
+        "tm_loc_y": 183759.31
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9045147907816,
+          35.16361428791052
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "GJ",
+        "local_name": "광주광역시",
+        "spot_code": "F12917001",
+        "spot_name": "코리아나 호텔 옆",
+        "div_name": "광주광역시 북구 신안동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 191284,
+        "tm_loc_y": 285259
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.90751900802208,
+          35.16169230148827
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "GJ",
+        "local_name": "광주광역시",
+        "spot_code": "F12917002",
+        "spot_name": "현대백화점 앞",
+        "div_name": "광주광역시 북구 신안동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 191560,
+        "tm_loc_y": 284989
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.80486989078469,
+          35.18728644470446
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "GJ",
+        "local_name": "광주광역시",
+        "spot_code": "F12920001",
+        "spot_name": "협동엔터프라이즈 앞",
+        "div_name": "광주광역시 광산구 하남동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 182151.492,
+        "tm_loc_y": 187584.633
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.80562398593452,
+          35.19099672042675
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "GJ",
+        "local_name": "광주광역시",
+        "spot_code": "F12920002",
+        "spot_name": "광일기공 앞",
+        "div_name": "광주광역시 광산구 장덕동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 182220.992,
+        "tm_loc_y": 187996.133
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.6035776307342,
+          35.86159134441733
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "DG",
+        "local_name": "대구광역시",
+        "spot_code": "F12711001",
+        "spot_name": "대봉동",
+        "div_name": "대구광역시 중구 대봉동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 164194,
+        "tm_loc_y": 362763
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.62893455092672,
+          35.8757139547672
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "DG",
+        "local_name": "대구광역시",
+        "spot_code": "F12714001",
+        "spot_name": "신천동",
+        "div_name": "대구광역시 동구 신천동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 166460,
+        "tm_loc_y": 364317
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.54039504992136,
+          35.87428570566975
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "DG",
+        "local_name": "대구광역시",
+        "spot_code": "F12717001",
+        "spot_name": "이현동",
+        "div_name": "대구광역시 서구 이현동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 339040.302,
+        "tm_loc_y": 264881.818
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.57339123559981,
+          35.84141648809887
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "DG",
+        "local_name": "대구광역시",
+        "spot_code": "F12720001",
+        "spot_name": "대명동",
+        "div_name": "대구광역시 남구 대명동",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 342079.018,
+        "tm_loc_y": 261281.684
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.553981433,
+          35.8916692178
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "DG",
+        "local_name": "대구광역시",
+        "spot_code": "F12723001",
+        "spot_name": "노원동",
+        "div_name": "대구광역시 북구 노원동1가",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 340236.78,
+        "tm_loc_y": 266830.26
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.625045829455,
+          35.8484965566398
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "DG",
+        "local_name": "대구광역시",
+        "spot_code": "F12726001",
+        "spot_name": "황금동",
+        "div_name": "대구광역시 수성구 황금동",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 346733.273,
+        "tm_loc_y": 262143.522
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.41641621853532,
+          36.31811629044206
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "DJ",
+        "local_name": "대전광역시",
+        "spot_code": "F13014001",
+        "spot_name": "충남대부속병원 앞",
+        "div_name": "대전광역시 중구 대사동",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 237322.338,
+        "tm_loc_y": 313117.512
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.39392140075631,
+          36.323535937717025
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "DJ",
+        "local_name": "대전광역시",
+        "spot_code": "F13014002",
+        "spot_name": "삼부아파트 앞",
+        "div_name": "대전광역시 중구 태평동",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 235299.838,
+        "tm_loc_y": 313710.512
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.42517362595119,
+          36.328291436027015
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "DJ",
+        "local_name": "대전광역시",
+        "spot_code": "F13014003",
+        "spot_name": "갤러리아백화점 앞",
+        "div_name": "대전광역시 중구 대흥동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 238176,
+        "tm_loc_y": 414556
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.33842560045849,
+          36.35465283464898
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "DJ",
+        "local_name": "대전광역시",
+        "spot_code": "F13020001",
+        "spot_name": "호텔리베라 앞",
+        "div_name": "대전광역시 유성구 봉명동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 230376,
+        "tm_loc_y": 417451
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.41071369839982,
+          36.36714201114513
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "DJ",
+        "local_name": "대전광역시",
+        "spot_code": "F13023001",
+        "spot_name": "태평양화학 앞",
+        "div_name": "대전광역시 대덕구 대화동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 236787.297,
+        "tm_loc_y": 318555.578
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.41168273793448,
+          36.44900443760406
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "DJ",
+        "local_name": "대전광역시",
+        "spot_code": "F13023002",
+        "spot_name": "한국타이어 앞",
+        "div_name": "대전광역시 대덕구 목상동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 236835.797,
+        "tm_loc_y": 327640.078
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.0312181603656,
+          35.09954963725485
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "BS",
+        "local_name": "부산광역시",
+        "spot_code": "F12611001",
+        "spot_name": "미라지오 앞",
+        "div_name": "부산광역시 중구 신창동1가",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 385139.46,
+        "tm_loc_y": 179715.53
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.01848277117435,
+          35.117388998706396
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "BS",
+        "local_name": "부산광역시",
+        "spot_code": "F12614001",
+        "spot_name": "의성쌀상회 앞",
+        "div_name": "부산광역시 서구 동대신동3가",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 383937.959,
+        "tm_loc_y": 181671.529
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.0574,
+          35.15776
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "BS",
+        "local_name": "부산광역시",
+        "spot_code": "F12623001",
+        "spot_name": "부산의료관광 안내센터 앞",
+        "div_name": "부산광역시 부산진구 부전동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 387382.94,
+        "tm_loc_y": 186237.59
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.96503731270857,
+          35.08801101359202
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "BS",
+        "local_name": "부산광역시",
+        "spot_code": "F12638001",
+        "spot_name": "㈜한국주철관 앞",
+        "div_name": "부산광역시 사하구 신평동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 379129.184,
+        "tm_loc_y": 178314.252
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.1032341043,
+          35.1878182589
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "BS",
+        "local_name": "부산광역시",
+        "spot_code": "F12647001",
+        "spot_name": "박형준 의원사무실 앞",
+        "div_name": "부산광역시 연제구 연산동",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 391500.42,
+        "tm_loc_y": 189646.75
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.9847413848,
+          35.1458583583
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "BS",
+        "local_name": "부산광역시",
+        "spot_code": "F12653001",
+        "spot_name": "학장초등학교 정문 앞",
+        "div_name": "부산광역시 사상구 학장동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 380798.61,
+        "tm_loc_y": 184768.91
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9825242958717,
+          37.57198440006998
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "SU",
+        "local_name": "서울특별시",
+        "spot_code": "F11111001",
+        "spot_name": "중앙지도문화사 앞",
+        "div_name": "서울특별시 종로구 공평동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 198462,
+        "tm_loc_y": 552490
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0099977746,
+          37.5880859815
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "SU",
+        "local_name": "서울특별시",
+        "spot_code": "F11129001",
+        "spot_name": "삼선동새마을금고 옆",
+        "div_name": "서울특별시 성북구 삼선동3가",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 200815.01,
+        "tm_loc_y": 453976.46
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.906,
+          37.51728
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "SU",
+        "local_name": "서울특별시",
+        "spot_code": "F11156001",
+        "spot_name": "신세계백화점",
+        "div_name": "서울특별시 영등포구 영등포동4가",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 191695,
+        "tm_loc_y": 546430
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0504269128,
+          37.5011241106
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "SU",
+        "local_name": "서울특별시",
+        "spot_code": "F11168001",
+        "spot_name": "SK뷰 501동 옆",
+        "div_name": "서울특별시 강남구 역삼동",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 204390.68,
+        "tm_loc_y": 444325.7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.3169,
+          35.55377
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "WS",
+        "local_name": "울산광역시",
+        "spot_code": "F13111001",
+        "spot_name": "중앙교복사",
+        "div_name": "울산광역시 중구 성남동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 410095,
+        "tm_loc_y": 331004
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.3381,
+          35.53709
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "WS",
+        "local_name": "울산광역시",
+        "spot_code": "F13114001",
+        "spot_name": "롯데시네마 뒤",
+        "div_name": "울산광역시 남구 삼산동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 230668,
+        "tm_loc_y": 326736
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.3175,
+          35.53266
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "WS",
+        "local_name": "울산광역시",
+        "spot_code": "F13114002",
+        "spot_name": "청솔초등학교",
+        "div_name": "울산광역시 남구 달동",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 228800,
+        "tm_loc_y": 326238
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.33805219,
+          35.51239312
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "WS",
+        "local_name": "울산광역시",
+        "spot_code": "F13114003",
+        "spot_name": "태광산업",
+        "div_name": "울산광역시 남구 선암동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 23068,
+        "tm_loc_y": 323984
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.4242,
+          35.51524
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "WS",
+        "local_name": "울산광역시",
+        "spot_code": "F13117001",
+        "spot_name": "산록사거리",
+        "div_name": "울산광역시 동구 전하동",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 238489,
+        "tm_loc_y": 324342
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.4303,
+          35.50805
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "WS",
+        "local_name": "울산광역시",
+        "spot_code": "F13117002",
+        "spot_name": "오자불펌프장",
+        "div_name": "울산광역시 동구 전하동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 239041,
+        "tm_loc_y": 323546
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.676,
+          37.44815
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "IC",
+        "local_name": "인천광역시",
+        "spot_code": "F12817001",
+        "spot_name": "신기중앙교회 앞",
+        "div_name": "인천광역시 남구",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 171339,
+        "tm_loc_y": 538799
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.6715,
+          37.41315
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "IC",
+        "local_name": "인천광역시",
+        "spot_code": "F12818001",
+        "spot_name": "조흥아파트101동앞",
+        "div_name": "인천광역시 연수구",
+        "legl_sect_code": "",
+        "use_sect_name": "주거지역",
+        "tm_loc_x": 170921,
+        "tm_loc_y": 534916
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.7066,
+          37.45327
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "IC",
+        "local_name": "인천광역시",
+        "spot_code": "F12820001",
+        "spot_name": "W타워 앞",
+        "div_name": "인천광역시 남동구",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 174041,
+        "tm_loc_y": 539359
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.6911,
+          37.40368
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "IC",
+        "local_name": "인천광역시",
+        "spot_code": "F12820002",
+        "spot_name": "청보산업 앞",
+        "div_name": "인천광역시 남동구 고잔동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 172657,
+        "tm_loc_y": 533859
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.7184,
+          37.51977
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "IC",
+        "local_name": "인천광역시",
+        "spot_code": "F12823001",
+        "spot_name": "이랜드 건너편",
+        "div_name": "인천광역시 부평구 청천동",
+        "legl_sect_code": "",
+        "use_sect_name": "공업지역",
+        "tm_loc_x": 175114,
+        "tm_loc_y": 546736
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.734,
+          37.53218
+        ]
+      },
+      "properties": {
+        "noise_type": "RV",
+        "noise_type_name": "도로교통소음(이동)",
+        "local_code": "IC",
+        "local_name": "인천광역시",
+        "spot_code": "F12824001",
+        "spot_name": "한림병원 앞",
+        "div_name": "인천광역시 계양구 작전동",
+        "legl_sect_code": "",
+        "use_sect_name": "상업지역",
+        "tm_loc_x": 176494,
+        "tm_loc_y": 548110
+      }
+    }
+  ]
+}
