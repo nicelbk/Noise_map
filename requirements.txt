@@ -1,5 +1,6 @@
 # Core YOLO and ML
 ultralytics>=8.2.0          # YOLOv8 + ByteTrack included
+lapx>=0.5.12                # ByteTrack 선형 할당 (lap 대체)
 torch>=2.0.0
 torchvision>=0.15.0
 

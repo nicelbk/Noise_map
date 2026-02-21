@@ -1,0 +1,19 @@
+# 생성 파일
+output/
+*.mp4
+*.jpg
+*.jpeg
+*.png
+*.pt
+*.pth
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# 로그
+*.log

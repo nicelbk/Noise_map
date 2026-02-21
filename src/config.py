@@ -14,7 +14,7 @@ ITERATION_INTERVAL_SEC = 5      # 반복 간 대기 시간 (초)
 
 # ─── YOLO 모델 설정 ──────────────────────────────────────────
 # yolov8n.pt(빠름/정확도낮음) ~ yolov8x.pt(느림/정확도높음)
-YOLO_MODEL = "yolov8s.pt"
+YOLO_MODEL = "yolov8n.pt"   # nano(빠름). 더 정확하려면 yolov8s.pt or yolov8m.pt
 YOLO_CONF_THRESHOLD = 0.45      # 탐지 신뢰도 임계값
 YOLO_IOU_THRESHOLD = 0.45       # NMS IOU 임계값
 YOLO_IMG_SIZE = 640
