@@ -1,0 +1,88 @@
+{
+  "cases": [
+    {
+      "id": "hanam_misa",
+      "name": "하남 미사강변도시",
+      "type": "신규개발", "program": "주거중심",
+      "area_ha": 546, "population": 93000,
+      "characteristics": ["수변","친환경"],
+      "zoning_mix": {"residential":0.45,"commercial":0.08,
+        "industrial":0.0,"green":0.25,"public":0.12,"road":0.10},
+      "road_density": 8.5,
+      "avg_block_size_m2": 8000, "far_avg": 180,
+      "lessons": "수변 완충녹지, 자전거도로 연계"
+    },
+    {
+      "id": "sejong_1",
+      "name": "세종시 1생활권",
+      "type": "신규개발", "program": "혼합용도",
+      "area_ha": 420, "population": 65000,
+      "characteristics": ["행정","보행중심","BRT"],
+      "zoning_mix": {"residential":0.40,"commercial":0.10,
+        "industrial":0.0,"green":0.28,"public":0.12,"road":0.10},
+      "road_density": 9.2,
+      "avg_block_size_m2": 6500, "far_avg": 200,
+      "lessons": "BRT 중심 TOD, 공공시설 집약"
+    },
+    {
+      "id": "incheon_songdo",
+      "name": "인천 송도국제도시",
+      "type": "신규개발", "program": "상업중심",
+      "area_ha": 611, "population": 90000,
+      "characteristics": ["국제업무","스마트","수변"],
+      "zoning_mix": {"residential":0.30,"commercial":0.20,
+        "industrial":0.05,"green":0.25,"public":0.10,"road":0.10},
+      "road_density": 7.8,
+      "avg_block_size_m2": 12000, "far_avg": 280,
+      "lessons": "격자형 도로망, 중앙공원 축"
+    },
+    {
+      "id": "seoul_eunpyeong",
+      "name": "서울 은평뉴타운",
+      "type": "재개발", "program": "주거중심",
+      "area_ha": 349, "population": 56000,
+      "characteristics": ["구릉지","재개발"],
+      "zoning_mix": {"residential":0.55,"commercial":0.06,
+        "industrial":0.0,"green":0.20,"public":0.09,"road":0.10},
+      "road_density": 7.2,
+      "avg_block_size_m2": 5500, "far_avg": 220,
+      "lessons": "지형 순응 도로망, 경사지 공원화"
+    },
+    {
+      "id": "gwanggyo",
+      "name": "광교신도시",
+      "type": "신규개발", "program": "자족도시",
+      "area_ha": 1129, "population": 78000,
+      "characteristics": ["자족","친환경","수변"],
+      "zoning_mix": {"residential":0.42,"commercial":0.09,
+        "industrial":0.05,"green":0.30,"public":0.07,"road":0.07},
+      "road_density": 6.5,
+      "avg_block_size_m2": 9000, "far_avg": 175,
+      "lessons": "호수공원 중심축, 대규모 녹지"
+    },
+    {
+      "id": "gimpo_hangang",
+      "name": "김포 한강신도시",
+      "type": "신규개발", "program": "주거중심",
+      "area_ha": 1170, "population": 176000,
+      "characteristics": ["수변","대규모"],
+      "zoning_mix": {"residential":0.50,"commercial":0.07,
+        "industrial":0.0,"green":0.22,"public":0.11,"road":0.10},
+      "road_density": 8.0,
+      "avg_block_size_m2": 7000, "far_avg": 190,
+      "lessons": "광역교통 연계, 단지별 특화"
+    },
+    {
+      "id": "pangyo",
+      "name": "판교신도시",
+      "type": "신규개발", "program": "자족도시",
+      "area_ha": 930, "population": 88000,
+      "characteristics": ["자족","IT","친환경"],
+      "zoning_mix": {"residential":0.38,"commercial":0.12,
+        "industrial":0.08,"green":0.25,"public":0.08,"road":0.09},
+      "road_density": 7.5,
+      "avg_block_size_m2": 10000, "far_avg": 200,
+      "lessons": "IT클러스터, 보행가로 특화"
+    }
+  ]
+}

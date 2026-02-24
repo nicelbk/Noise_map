@@ -1,0 +1,12 @@
+fastapi>=0.104.0
+uvicorn>=0.24.0
+geopandas>=0.14.0
+shapely>=2.0.0
+pyproj>=3.6.0
+networkx>=3.2.0
+requests>=2.31.0
+numpy>=1.26.0
+scipy>=1.11.0
+matplotlib>=3.8.0
+pyyaml>=6.0.1
+python-multipart>=0.0.6

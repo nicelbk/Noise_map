@@ -1,0 +1,80 @@
+# 서울시 기준 (국토계획법 + 서울시 도시계획 조례)
+zoning:
+  R1:
+    name: "제1종전용주거지역"
+    far_max: 100
+    bcr_max: 50
+    height_max: 9
+    floor_max: 2
+  R2:
+    name: "제2종전용주거지역"
+    far_max: 120
+    bcr_max: 40
+    height_max: null
+    floor_max: 4
+  R3:
+    name: "제1종일반주거지역"
+    far_max: 150
+    bcr_max: 60
+    height_max: null
+    floor_max: 4
+  R4:
+    name: "제2종일반주거지역"
+    far_max: 200
+    bcr_max: 60
+    height_max: null
+    floor_max: 18
+  R5:
+    name: "제3종일반주거지역"
+    far_max: 300
+    bcr_max: 50
+    height_max: null
+    floor_max: null
+  RQ:
+    name: "준주거지역"
+    far_max: 500
+    bcr_max: 70
+    height_max: null
+    floor_max: null
+  CB:
+    name: "중심상업지역"
+    far_max: 1000
+    bcr_max: 90
+    height_max: null
+    floor_max: null
+  CG:
+    name: "일반상업지역"
+    far_max: 800
+    bcr_max: 80
+    height_max: null
+    floor_max: null
+  CN:
+    name: "근린상업지역"
+    far_max: 600
+    bcr_max: 70
+    height_max: null
+    floor_max: null
+  IQ:
+    name: "준공업지역"
+    far_max: 400
+    bcr_max: 70
+    height_max: null
+    floor_max: null
+  GN:
+    name: "자연녹지지역"
+    far_max: 100
+    bcr_max: 20
+    height_max: null
+    floor_max: null
+  PK:
+    name: "공원"
+    far_max: 0
+    bcr_max: 0
+    height_max: null
+    floor_max: null
+  PF:
+    name: "공공시설"
+    far_max: 200
+    bcr_max: 60
+    height_max: null
+    floor_max: null

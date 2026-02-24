@@ -1,0 +1,59 @@
+# 공공시설 배치 기준 (도시공원 및 녹지 등에 관한 법률, 학교시설기준)
+parks:
+  neighborhood:
+    name: "근린공원"
+    area_min_m2: 10000
+    area_max_m2: 100000
+    service_radius_m: 500
+    households_per_park: 1000
+    min_ratio: 0.05  # 전체 면적 대비
+
+  children:
+    name: "어린이공원"
+    area_min_m2: 1500
+    area_max_m2: 5000
+    service_radius_m: 250
+    households_per_park: 300
+    min_ratio: 0.02
+
+schools:
+  elementary:
+    name: "초등학교"
+    area_min_m2: 5000
+    area_max_m2: 10000
+    service_radius_m: 500
+    households_per_school: 500
+    persons_per_household: 2.5
+
+  middle:
+    name: "중학교"
+    area_min_m2: 8000
+    area_max_m2: 15000
+    service_radius_m: 1000
+    households_per_school: 2000
+
+  high:
+    name: "고등학교"
+    area_min_m2: 10000
+    area_max_m2: 20000
+    service_radius_m: 1500
+    households_per_school: 3000
+
+public_facilities:
+  community_center:
+    name: "주민센터"
+    area_min_m2: 1000
+    area_max_m2: 3000
+    households_per_facility: 2000
+
+  welfare_center:
+    name: "복지관"
+    area_min_m2: 2000
+    area_max_m2: 5000
+    population_per_facility: 10000
+
+# 녹지율 기준
+green_ratio:
+  residential_min: 0.10
+  mixed_min: 0.08
+  commercial_min: 0.05

@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한국 도시설계 토지이용계획 수립 툴</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; font-size: 13px; background: #1a1a2e; color: #e0e0e0; display: flex; height: 100vh; overflow: hidden; }
+
+/* ── Left Panel ── */
+#left-panel {
+  width: 300px; min-width: 300px; background: #16213e;
+  display: flex; flex-direction: column; border-right: 1px solid #0f3460;
+  overflow: hidden;
+}
+#left-panel h2 {
+  background: linear-gradient(135deg, #0f3460, #533483);
+  color: #fff; padding: 14px 16px; font-size: 14px;
+  border-bottom: 2px solid #e94560; flex-shrink: 0;
+}
+#left-panel h2 span { font-size: 10px; color: #aaa; display: block; margin-top: 2px; }
+.form-scroll { overflow-y: auto; flex: 1; padding: 12px; }
+.form-section { background: #0f3460; border-radius: 6px; padding: 10px; margin-bottom: 10px; }
+.form-section h3 { color: #e94560; font-size: 11px; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+.field { margin-bottom: 8px; }
+.field label { display: block; color: #aaa; font-size: 11px; margin-bottom: 3px; }
+.field input, .field select, .field textarea {
+  width: 100%; background: #1a1a2e; border: 1px solid #0f3460;
+  color: #e0e0e0; padding: 6px 8px; border-radius: 4px; font-size: 12px;
+}
+.field input:focus, .field select:focus { outline: none; border-color: #e94560; }
+.field textarea { height: 60px; resize: none; font-size: 11px; }
+.priority-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+.priority-row label { color: #aaa; font-size: 11px; width: 70px; flex-shrink: 0; }
+.priority-row input[type=range] { flex: 1; accent-color: #e94560; }
+.priority-row span { color: #e94560; font-size: 11px; width: 16px; text-align: right; }
+
+#btn-draw { width: 100%; background: #533483; color: #fff; border: none; padding: 9px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-bottom: 6px; }
+#btn-draw:hover { background: #7b52b9; }
+#btn-plan { width: 100%; background: linear-gradient(135deg, #e94560, #c23152); color: #fff; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; }
+#btn-plan:hover { background: linear-gradient(135deg, #ff6b8a, #e94560); }
+#btn-plan:disabled { background: #444; cursor: not-allowed; }
+#btn-clear { width: 100%; background: #333; color: #aaa; border: none; padding: 7px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-top: 5px; }
+#btn-clear:hover { background: #444; }
+
+.status-bar { background: #0f3460; padding: 8px 12px; font-size: 11px; color: #aaa; border-top: 1px solid #533483; flex-shrink: 0; }
+.status-bar.error { color: #e94560; }
+.status-bar.success { color: #2ecc71; }
+
+/* ── Map Panel ── */
+#map-container { flex: 1; position: relative; }
+#map { width: 100%; height: 100%; }
+
+.map-legend {
+  position: absolute; bottom: 20px; left: 10px; z-index: 1000;
+  background: rgba(22,33,62,0.92); border: 1px solid #0f3460;
+  border-radius: 6px; padding: 10px 12px; max-width: 180px;
+}
+.map-legend h4 { color: #e94560; font-size: 11px; margin-bottom: 6px; }
+.legend-item { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; font-size: 10px; color: #ccc; }
+.legend-color { width: 14px; height: 14px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.2); }
+
+.layer-controls {
+  position: absolute; top: 10px; right: 10px; z-index: 1000;
+  background: rgba(22,33,62,0.92); border: 1px solid #0f3460;
+  border-radius: 6px; padding: 8px 10px;
+}
+.layer-controls h4 { color: #e94560; font-size: 10px; margin-bottom: 5px; }
+.layer-toggle { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; font-size: 10px; color: #ccc; cursor: pointer; }
+.layer-toggle input { accent-color: #e94560; }
+
+/* ── Right Panel ── */
+#right-panel {
+  width: 350px; min-width: 350px; background: #16213e;
+  display: flex; flex-direction: column; border-left: 1px solid #0f3460;
+  overflow: hidden;
+}
+#right-panel h2 { background: linear-gradient(135deg, #0f3460, #533483); color: #fff; padding: 14px 16px; font-size: 14px; border-bottom: 2px solid #e94560; flex-shrink: 0; }
+
+.tabs { display: flex; background: #0f3460; flex-shrink: 0; }
+.tab-btn { flex: 1; padding: 8px 4px; font-size: 11px; color: #aaa; background: transparent; border: none; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+.tab-btn.active { color: #e94560; border-bottom-color: #e94560; }
+.tab-btn:hover { color: #fff; }
+
+.tab-content { display: none; flex: 1; overflow-y: auto; padding: 12px; }
+.tab-content.active { display: block; }
+
+/* Stats */
+.stat-card { background: #0f3460; border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+.stat-card h4 { color: #e94560; font-size: 11px; margin-bottom: 6px; text-transform: uppercase; }
+.stat-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 11px; }
+.stat-row:last-child { border-bottom: none; }
+.stat-label { color: #aaa; }
+.stat-value { color: #fff; font-weight: bold; }
+
+.zoning-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.zoning-table th { background: #1a1a2e; color: #aaa; padding: 4px 6px; text-align: left; }
+.zoning-table td { padding: 4px 6px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.zoning-color-cell { width: 14px; height: 14px; border-radius: 2px; display: inline-block; }
+
+.gauge-bar-wrap { margin: 4px 0 8px; }
+.gauge-label { display: flex; justify-content: space-between; font-size: 10px; color: #aaa; margin-bottom: 2px; }
+.gauge-track { height: 8px; background: #1a1a2e; border-radius: 4px; overflow: hidden; position: relative; }
+.gauge-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.gauge-fill.good { background: #2ecc71; }
+.gauge-fill.bad { background: #e94560; }
+.gauge-marks { position: relative; height: 4px; margin-top: 2px; }
+.gauge-mark { position: absolute; width: 1px; height: 4px; background: #555; }
+.gauge-mark-label { position: absolute; font-size: 9px; color: #555; transform: translateX(-50%); top: -2px; }
+
+/* Validation */
+.check-list { list-style: none; }
+.check-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 8px; border-radius: 4px; margin-bottom: 4px; background: #0f3460; font-size: 11px; }
+.check-item .icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.check-item .detail { color: #aaa; font-size: 10px; margin-top: 1px; }
+.check-item.pass { border-left: 3px solid #2ecc71; }
+.check-item.fail { border-left: 3px solid #e94560; }
+.section-header { color: #e94560; font-size: 11px; font-weight: bold; text-transform: uppercase; margin: 8px 0 5px; letter-spacing: 1px; }
+.score-circle { width: 80px; height: 80px; border-radius: 50%; border: 4px solid #e94560; display: flex; align-items: center; justify-content: center; flex-direction: column; margin: 0 auto 12px; }
+.score-num { font-size: 26px; font-weight: bold; color: #e94560; line-height: 1; }
+.score-label { font-size: 9px; color: #aaa; }
+
+/* Context */
+.compass-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-bottom: 8px; }
+.compass-cell { background: #0f3460; border-radius: 4px; padding: 6px; text-align: center; font-size: 10px; }
+.compass-cell.center { background: #533483; }
+.compass-dir { color: #e94560; font-size: 9px; display: block; }
+.compass-use { color: #fff; font-size: 11px; }
+.info-badge { display: inline-block; background: #0f3460; border-radius: 12px; padding: 3px 8px; font-size: 11px; margin: 2px; color: #e0e0e0; }
+.info-badge.active { background: #533483; color: #fff; }
+.rec-item { background: #0f3460; border-radius: 4px; padding: 6px 8px; margin-bottom: 4px; font-size: 11px; color: #ccc; border-left: 3px solid #533483; }
+
+/* Report */
+.report-text { background: #0f3460; border-radius: 6px; padding: 12px; font-size: 11px; line-height: 1.7; color: #ccc; white-space: pre-wrap; }
+.report-section { margin-bottom: 12px; }
+.report-section h4 { color: #e94560; margin-bottom: 6px; font-size: 12px; }
+#btn-export { width: 100%; background: #533483; color: #fff; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-bottom: 8px; }
+
+/* Loading overlay */
+#loading-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center; flex-direction: column;
+}
+#loading-overlay.show { display: flex; }
+.spinner { width: 50px; height: 50px; border: 4px solid #333; border-top-color: #e94560; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-msg { color: #fff; margin-top: 16px; font-size: 14px; }
+.loading-steps { color: #aaa; font-size: 12px; margin-top: 6px; }
+
+/* Block label */
+.block-label { background: transparent; border: none; color: #fff; font-size: 10px; font-weight: bold; text-shadow: 0 0 3px #000, 0 0 3px #000; white-space: nowrap; pointer-events: none; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0f3460; }
+::-webkit-scrollbar-thumb { background: #533483; border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- Left Panel -->
+<div id="left-panel">
+  <h2>🏙 도시설계 토지이용계획 툴
+    <span>Korean Urban Planning Tool v1.0</span>
+  </h2>
+  <div class="form-scroll">
+
+    <div class="form-section">
+      <h3>📍 대상지 설정</h3>
+      <div class="field">
+        <label>구역 이름</label>
+        <input type="text" id="site-name" value="신도시 개발구역" placeholder="구역명 입력">
+      </div>
+      <div class="field">
+        <label>개발 유형</label>
+        <select id="dev-type">
+          <option value="신규개발">신규개발</option>
+          <option value="재개발">재개발</option>
+          <option value="재건축">재건축</option>
+          <option value="도시정비">도시정비</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>개발 프로그램</label>
+        <select id="program">
+          <option value="혼합용도">혼합용도</option>
+          <option value="주거중심">주거중심</option>
+          <option value="상업중심">상업중심</option>
+          <option value="자족도시">자족도시</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>지역</label>
+        <select id="region">
+          <option value="서울">서울</option>
+          <option value="경기">경기</option>
+          <option value="인천">인천</option>
+          <option value="부산">부산</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>🎯 계획 목표</h3>
+      <div class="field">
+        <label>목표 인구 (명, 0=자동)</label>
+        <input type="number" id="target-pop" value="0" min="0">
+      </div>
+      <div class="field">
+        <label>목표 용적률 (%)</label>
+        <input type="number" id="target-far" value="200" min="0" max="1500">
+      </div>
+      <div class="field">
+        <label>최소 녹지율 (%)</label>
+        <input type="number" id="green-ratio" value="10" min="5" max="40">
+      </div>
+      <div class="field">
+        <label>도로율 목표 (%)</label>
+        <input type="number" id="road-ratio" value="25" min="15" max="35">
+      </div>
+      <div class="field">
+        <label>대중교통 접근성</label>
+        <select id="transit">
+          <option value="없음">없음</option>
+          <option value="버스">버스</option>
+          <option value="지하철">지하철</option>
+          <option value="복합">복합(버스+지하철)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>⚖ 설계 우선순위</h3>
+      <div class="priority-row">
+        <label>밀도</label>
+        <input type="range" min="1" max="5" value="3" id="p-density" oninput="document.getElementById('v-density').textContent=this.value">
+        <span id="v-density">3</span>
+      </div>
+      <div class="priority-row">
+        <label>녹지</label>
+        <input type="range" min="1" max="5" value="3" id="p-green" oninput="document.getElementById('v-green').textContent=this.value">
+        <span id="v-green">3</span>
+      </div>
+      <div class="priority-row">
+        <label>보행성</label>
+        <input type="range" min="1" max="5" value="3" id="p-walk" oninput="document.getElementById('v-walk').textContent=this.value">
+        <span id="v-walk">3</span>
+      </div>
+      <div class="priority-row">
+        <label>공공시설</label>
+        <input type="range" min="1" max="5" value="3" id="p-public" oninput="document.getElementById('v-public').textContent=this.value">
+        <span id="v-public">3</span>
+      </div>
+      <div class="priority-row">
+        <label>교통</label>
+        <input type="range" min="1" max="5" value="3" id="p-traffic" oninput="document.getElementById('v-traffic').textContent=this.value">
+        <span id="v-traffic">3</span>
+      </div>
+    </div>
+
+    <button id="btn-draw" onclick="startDraw()">✏ 대상지 경계 그리기</button>
+    <button id="btn-plan" onclick="runPlan()" disabled>▶ 토지이용계획 수립</button>
+    <button id="btn-clear" onclick="clearAll()">🗑 초기화</button>
+  </div>
+  <div class="status-bar" id="status-bar">대상지 경계를 그려 시작하세요.</div>
+</div>
+
+<!-- Map -->
+<div id="map-container">
+  <div id="map"></div>
+
+  <div class="layer-controls">
+    <h4>레이어 제어</h4>
+    <label class="layer-toggle"><input type="checkbox" id="lyr-context-road" checked onchange="toggleLayer('contextRoad', this.checked)"> 주변 도로</label>
+    <label class="layer-toggle"><input type="checkbox" id="lyr-context-lu" checked onchange="toggleLayer('contextLanduse', this.checked)"> 주변 토지이용</label>
+    <label class="layer-toggle"><input type="checkbox" id="lyr-road" checked onchange="toggleLayer('road', this.checked)"> 계획 도로</label>
+    <label class="layer-toggle"><input type="checkbox" id="lyr-zoning" checked onchange="toggleLayer('zoning', this.checked)"> 용도지역</label>
+    <label class="layer-toggle"><input type="checkbox" id="lyr-facility" checked onchange="toggleLayer('facility', this.checked)"> 공공시설</label>
+    <label class="layer-toggle"><input type="checkbox" id="lyr-block-label" checked onchange="toggleLayer('blockLabel', this.checked)"> 블록 라벨</label>
+    <label class="layer-toggle"><input type="checkbox" id="lyr-subway" checked onchange="toggleLayer('subway', this.checked)"> 지하철역</label>
+  </div>
+
+  <div class="map-legend" id="map-legend" style="display:none">
+    <h4>용도지역 범례</h4>
+    <div id="legend-items"></div>
+  </div>
+</div>
+
+<!-- Right Panel -->
+<div id="right-panel">
+  <h2>📊 분석 결과
+  </h2>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('stats')">통계</button>
+    <button class="tab-btn" onclick="switchTab('validation')">검증</button>
+    <button class="tab-btn" onclick="switchTab('context')">맥락</button>
+    <button class="tab-btn" onclick="switchTab('report')">보고서</button>
+  </div>
+
+  <!-- STATS TAB -->
+  <div class="tab-content active" id="tab-stats">
+    <div style="color:#555; font-size:12px; text-align:center; padding:30px 0;" id="stats-placeholder">
+      계획 수립 후 결과가 표시됩니다.
+    </div>
+    <div id="stats-content" style="display:none">
+      <div class="stat-card">
+        <h4>🏠 대상지 현황</h4>
+        <div class="stat-row"><span class="stat-label">면적</span><span class="stat-value" id="s-area">-</span></div>
+        <div class="stat-row"><span class="stat-label">둘레</span><span class="stat-value" id="s-perimeter">-</span></div>
+        <div class="stat-row"><span class="stat-label">형상지수</span><span class="stat-value" id="s-shape">-</span></div>
+        <div class="stat-row"><span class="stat-label">진입점</span><span class="stat-value" id="s-entry">-</span></div>
+        <div class="stat-row"><span class="stat-label">블록 수</span><span class="stat-value" id="s-blocks">-</span></div>
+      </div>
+
+      <div class="stat-card">
+        <h4>🛣 도로율</h4>
+        <div class="gauge-bar-wrap">
+          <div class="gauge-label"><span>현재</span><span id="gauge-road-val">0%</span></div>
+          <div class="gauge-track">
+            <div class="gauge-fill" id="gauge-road" style="width:0%"></div>
+          </div>
+          <div style="font-size:9px; color:#555; margin-top:2px;">기준: 20~30% (빨강=기준 외)</div>
+        </div>
+        <div class="stat-row"><span class="stat-label">총 도로 연장</span><span class="stat-value" id="s-road-len">-</span></div>
+        <div class="stat-row"><span class="stat-label">도로 면적</span><span class="stat-value" id="s-road-area">-</span></div>
+      </div>
+
+      <div class="stat-card">
+        <h4>🌿 녹지율</h4>
+        <div class="gauge-bar-wrap">
+          <div class="gauge-label"><span>현재</span><span id="gauge-green-val">0%</span></div>
+          <div class="gauge-track">
+            <div class="gauge-fill" id="gauge-green" style="width:0%"></div>
+          </div>
+          <div style="font-size:9px; color:#555; margin-top:2px;">기준: 최소 10%</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <h4>🏘 용도지역 배분</h4>
+        <table class="zoning-table" id="zoning-table">
+          <thead><tr><th></th><th>용도</th><th>면적(ha)</th><th>비율</th></tr></thead>
+          <tbody id="zoning-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="stat-card">
+        <h4>👥 수용 능력 추정</h4>
+        <div class="stat-row"><span class="stat-label">추정 세대수</span><span class="stat-value" id="s-households">-</span></div>
+        <div class="stat-row"><span class="stat-label">추정 인구</span><span class="stat-value" id="s-population">-</span></div>
+        <div class="stat-row"><span class="stat-label">1인당 녹지</span><span class="stat-value" id="s-green-per">-</span></div>
+        <div class="stat-row"><span class="stat-label">공원 250m 커버</span><span class="stat-value" id="s-park-cov">-</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VALIDATION TAB -->
+  <div class="tab-content" id="tab-validation">
+    <div style="color:#555; font-size:12px; text-align:center; padding:30px 0;" id="val-placeholder">
+      계획 수립 후 결과가 표시됩니다.
+    </div>
+    <div id="val-content" style="display:none">
+      <div class="score-circle" id="score-circle">
+        <div class="score-num" id="score-num">0</div>
+        <div class="score-label">종합 점수</div>
+      </div>
+      <div class="section-header">필수 검토 항목</div>
+      <ul class="check-list" id="required-list"></ul>
+      <div class="section-header" style="margin-top:10px">권장 검토 항목</div>
+      <ul class="check-list" id="recommended-list"></ul>
+    </div>
+  </div>
+
+  <!-- CONTEXT TAB -->
+  <div class="tab-content" id="tab-context">
+    <div style="color:#555; font-size:12px; text-align:center; padding:30px 0;" id="ctx-placeholder">
+      계획 수립 후 결과가 표시됩니다.
+    </div>
+    <div id="ctx-content" style="display:none">
+      <div class="stat-card">
+        <h4>🧭 주변 용도</h4>
+        <div class="compass-grid">
+          <div></div>
+          <div class="compass-cell"><span class="compass-dir">북</span><span class="compass-use" id="adj-n">-</span></div>
+          <div></div>
+          <div class="compass-cell"><span class="compass-dir">서</span><span class="compass-use" id="adj-w">-</span></div>
+          <div class="compass-cell center"><span class="compass-dir">대상지</span><span class="compass-use">📍</span></div>
+          <div class="compass-cell"><span class="compass-dir">동</span><span class="compass-use" id="adj-e">-</span></div>
+          <div></div>
+          <div class="compass-cell"><span class="compass-dir">남</span><span class="compass-use" id="adj-s">-</span></div>
+          <div></div>
+        </div>
+        <div class="stat-row"><span class="stat-label">주변 지배 용도</span><span class="stat-value" id="dominant-use">-</span></div>
+      </div>
+
+      <div class="stat-card">
+        <h4>🚇 대중교통</h4>
+        <div class="stat-row"><span class="stat-label">최근 지하철역</span><span class="stat-value" id="subway-name">-</span></div>
+        <div class="stat-row"><span class="stat-label">지하철까지 거리</span><span class="stat-value" id="subway-dist">-</span></div>
+        <div class="stat-row"><span class="stat-label">역세권 여부</span><span class="stat-value" id="tod-zone">-</span></div>
+      </div>
+
+      <div class="stat-card">
+        <h4>🚪 진입점 목록</h4>
+        <div id="entry-list">진입점 없음</div>
+      </div>
+
+      <div class="stat-card">
+        <h4>💡 설계 권고사항</h4>
+        <div id="recommendations">-</div>
+      </div>
+
+      <div class="stat-card">
+        <h4>📚 유사 사례</h4>
+        <div id="similar-cases">-</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT TAB -->
+  <div class="tab-content" id="tab-report">
+    <div style="color:#555; font-size:12px; text-align:center; padding:30px 0;" id="rpt-placeholder">
+      계획 수립 후 결과가 표시됩니다.
+    </div>
+    <div id="rpt-content" style="display:none">
+      <button id="btn-export" onclick="exportReport()">📄 보고서 내보내기</button>
+      <div class="report-section">
+        <h4>📋 계획 개요</h4>
+        <div class="report-text" id="rpt-overview"></div>
+      </div>
+      <div class="report-section">
+        <h4>🗺 토지이용 계획</h4>
+        <div class="report-text" id="rpt-rationale"></div>
+      </div>
+      <div class="report-section">
+        <h4>🛣 도로망 계획</h4>
+        <div class="report-text" id="rpt-roads"></div>
+      </div>
+      <div class="report-section">
+        <h4>🏫 공공시설 계획</h4>
+        <div class="report-text" id="rpt-facilities"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-msg" id="loading-msg">계획 수립 중...</div>
+  <div class="loading-steps" id="loading-steps">OSM 데이터 수집 중</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+<script>
+// =====================================================
+// CONSTANTS
+// =====================================================
+const ZONING_COLORS = {
+  'R1': '#FFE4E1', 'R2': '#FFCDD2',
+  'R3': '#FFB3BA', 'R4': '#FF8FAB',
+  'R5': '#FF69B4', 'RQ': '#DDA0DD',
+  'CB': '#FF2400', 'CG': '#FF4500',
+  'CN': '#FF8C00', 'IQ': '#A9A9A9',
+  'GN': '#228B22', 'PK': '#90EE90',
+  'PF': '#4169E1', 'ROAD': '#CCCCCC'
+};
+
+const LANDUSE_COLORS = {
+  'residential': '#FFB3BA', 'commercial': '#FFA07A',
+  'industrial': '#A9A9A9', 'farmland': '#DEB887',
+  'forest': '#228B22', 'grass': '#7CFC00',
+  'park': '#90EE90', 'recreation_ground': '#90EE90',
+  'school': '#87CEEB', 'hospital': '#FFB6C1',
+};
+
+const FACILITY_COLORS_MAP = {
+  'neighborhood_park': '#2ECC71',
+  'children_park': '#27AE60',
+  'elementary_school': '#3498DB',
+  'middle_school': '#2980B9',
+  'high_school': '#1ABC9C',
+  'community_center': '#E74C3C',
+  'welfare_center': '#E67E22',
+};
+
+const FACILITY_NAMES = {
+  'neighborhood_park': '근린공원',
+  'children_park': '어린이공원',
+  'elementary_school': '초등학교',
+  'middle_school': '중학교',
+  'high_school': '고등학교',
+  'community_center': '주민센터',
+  'welfare_center': '복지관',
+};
+
+const ROAD_HIERARCHY_STYLE = {
+  'primary': { weight: 8, color: '#555555', opacity: 0.9 },
+  'secondary': { weight: 5, color: '#777777', opacity: 0.85 },
+  'local': { weight: 3, color: '#999999', opacity: 0.8 },
+};
+
+// =====================================================
+// MAP SETUP
+// =====================================================
+const map = L.map('map', {
+  center: [37.5665, 126.9780],
+  zoom: 14,
+  zoomControl: true,
+});
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap © CARTO',
+  maxZoom: 20,
+}).addTo(map);
+
+// Draw control
+const drawnItems = new L.FeatureGroup().addTo(map);
+const drawControl = new L.Control.Draw({
+  edit: { featureGroup: drawnItems, remove: true },
+  draw: {
+    polygon: {
+      allowIntersection: false,
+      showArea: true,
+      shapeOptions: { color: '#e94560', fillColor: '#e94560', fillOpacity: 0.2 }
+    },
+    rectangle: {
+      shapeOptions: { color: '#e94560', fillColor: '#e94560', fillOpacity: 0.2 }
+    },
+    circle: false, marker: false, circlemarker: false, polyline: false,
+  }
+});
+
+map.on(L.Draw.Event.CREATED, function(e) {
+  drawnItems.clearLayers();
+  drawnItems.addLayer(e.layer);
+  document.getElementById('btn-plan').disabled = false;
+  setStatus('경계가 그려졌습니다. 계획 수립 버튼을 클릭하세요.', 'success');
+  // Fit map to drawn boundary
+  map.fitBounds(e.layer.getBounds(), { padding: [50, 50] });
+});
+
+map.on(L.Draw.Event.EDITED, function() {
+  document.getElementById('btn-plan').disabled = false;
+});
+
+// Layer groups
+const layers = {
+  contextRoad: L.layerGroup().addTo(map),
+  contextLanduse: L.layerGroup().addTo(map),
+  road: L.layerGroup().addTo(map),
+  zoning: L.layerGroup().addTo(map),
+  facility: L.layerGroup().addTo(map),
+  blockLabel: L.layerGroup().addTo(map),
+  subway: L.layerGroup().addTo(map),
+  entryPoint: L.layerGroup().addTo(map),
+};
+
+function toggleLayer(name, visible) {
+  if (visible) map.addLayer(layers[name]);
+  else map.removeLayer(layers[name]);
+}
+
+// =====================================================
+// UI HELPERS
+// =====================================================
+function setStatus(msg, type = '') {
+  const el = document.getElementById('status-bar');
+  el.textContent = msg;
+  el.className = 'status-bar ' + type;
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['stats','validation','context','report'][i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + (name === 'stats' ? 'stats' : name === 'validation' ? 'validation' : name === 'context' ? 'context' : 'report')).classList.add('active');
+}
+
+function startDraw() {
+  new L.Draw.Polygon(map, drawControl.options.draw.polygon).enable();
+  setStatus('지도 위 대상지 경계를 클릭해 그리세요. 더블클릭으로 완료.', '');
+}
+
+function clearAll() {
+  drawnItems.clearLayers();
+  Object.values(layers).forEach(l => l.clearLayers());
+  document.getElementById('btn-plan').disabled = true;
+  document.getElementById('map-legend').style.display = 'none';
+  ['stats-content', 'val-content', 'ctx-content', 'rpt-content'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  ['stats-placeholder', 'val-placeholder', 'ctx-placeholder', 'rpt-placeholder'].forEach(id => {
+    document.getElementById(id).style.display = 'block';
+  });
+  setStatus('초기화되었습니다. 대상지 경계를 그려 시작하세요.', '');
+}
+
+// =====================================================
+// GET BOUNDARY GEOJSON
+// =====================================================
+function getBoundaryGeoJSON() {
+  const l = drawnItems.getLayers();
+  if (!l.length) return null;
+  const layer = l[0];
+  const latlngs = layer.getLatLngs ? layer.getLatLngs() : null;
+  if (!latlngs) return null;
+
+  // Flatten to simple ring
+  let coords;
+  if (Array.isArray(latlngs[0]) && Array.isArray(latlngs[0][0])) {
+    coords = latlngs[0][0].map(ll => [ll.lng, ll.lat]);
+  } else if (Array.isArray(latlngs[0])) {
+    coords = latlngs[0].map(ll => [ll.lng, ll.lat]);
+  } else {
+    coords = latlngs.map(ll => [ll.lng, ll.lat]);
+  }
+
+  // Close ring
+  if (coords[0][0] !== coords[coords.length-1][0] || coords[0][1] !== coords[coords.length-1][1]) {
+    coords.push(coords[0]);
+  }
+
+  return { type: 'Polygon', coordinates: [coords] };
+}
+
+// =====================================================
+// MAIN PLAN FUNCTION
+// =====================================================
+async function runPlan() {
+  const boundary = getBoundaryGeoJSON();
+  if (!boundary) { setStatus('대상지 경계를 먼저 그려주세요.', 'error'); return; }
+
+  const overlay = document.getElementById('loading-overlay');
+  overlay.classList.add('show');
+
+  const steps = [
+    'OSM 데이터 수집 중...',
+    '현황 분석 중...',
+    '도로망 생성 중...',
+    '블록 분할 중...',
+    '용도지역 배치 중...',
+    '공공시설 배치 중...',
+    '법규 검증 중...',
+  ];
+  let stepIdx = 0;
+  const stepInterval = setInterval(() => {
+    if (stepIdx < steps.length) {
+      document.getElementById('loading-steps').textContent = steps[stepIdx++];
+    }
+  }, 1500);
+
+  try {
+    setStatus('계획 수립 중...', '');
+    const payload = {
+      boundary_geojson: boundary,
+      site_name: document.getElementById('site-name').value,
+      development_type: document.getElementById('dev-type').value,
+      program: document.getElementById('program').value,
+      target_population: parseInt(document.getElementById('target-pop').value) || 0,
+      target_far: parseFloat(document.getElementById('target-far').value) || 200,
+      green_ratio_min: (parseFloat(document.getElementById('green-ratio').value) || 10) / 100,
+      road_ratio_target: (parseFloat(document.getElementById('road-ratio').value) || 25) / 100,
+      region: document.getElementById('region').value,
+      transit_access: document.getElementById('transit').value,
+      priority: {
+        density: parseInt(document.getElementById('p-density').value),
+        green: parseInt(document.getElementById('p-green').value),
+        walkability: parseInt(document.getElementById('p-walk').value),
+        publicfacility: parseInt(document.getElementById('p-public').value),
+        traffic: parseInt(document.getElementById('p-traffic').value),
+      }
+    };
+
+    const res = await fetch('/api/plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const json = await res.json();
+
+    if (!json.success) {
+      setStatus('오류: ' + json.error, 'error');
+      console.error(json.traceback);
+      return;
+    }
+
+    // Render results
+    renderResults(json.data, boundary);
+    setStatus('✅ 토지이용계획 수립 완료!', 'success');
+
+  } catch (err) {
+    setStatus('네트워크 오류: ' + err.message, 'error');
+    console.error(err);
+  } finally {
+    clearInterval(stepInterval);
+    overlay.classList.remove('show');
+  }
+}
+
+// =====================================================
+// RENDER ALL RESULTS
+// =====================================================
+function renderResults(data, boundary) {
+  // Clear layers
+  Object.values(layers).forEach(l => l.clearLayers());
+
+  // Layer 1: Context landuse (dotted background)
+  if (data.context_geojson && data.context_geojson.landuse) {
+    try {
+      const luData = JSON.parse(data.context_geojson.landuse);
+      L.geoJSON(luData, {
+        style: f => {
+          const lu = f.properties.landuse || '';
+          const color = LANDUSE_COLORS[lu] || '#888888';
+          return { color: '#aaa', weight: 1, dashArray: '4,3', fillColor: color, fillOpacity: 0.15 };
+        },
+        onEachFeature: (f, l) => {
+          const name = f.properties.name || f.properties.landuse || '';
+          if (name) l.bindTooltip(name, { permanent: false, direction: 'center', className: 'block-label' });
+        }
+      }).addTo(layers.contextLanduse);
+    } catch(e) { console.warn('Context landuse error:', e); }
+  }
+
+  // Layer 2: Context roads (dotted orange)
+  if (data.context_geojson && data.context_geojson.roads) {
+    try {
+      const rdData = JSON.parse(data.context_geojson.roads);
+      L.geoJSON(rdData, {
+        style: { color: '#FF6600', weight: 2, dashArray: '6,4', opacity: 0.5 },
+      }).addTo(layers.contextRoad);
+    } catch(e) { console.warn('Context road error:', e); }
+  }
+
+  // Layer 3: Planned roads (solid, by hierarchy)
+  if (data.roads && data.roads.features) {
+    L.geoJSON(data.roads, {
+      style: f => {
+        const hier = f.properties.hierarchy || 'local';
+        const s = ROAD_HIERARCHY_STYLE[hier] || ROAD_HIERARCHY_STYLE.local;
+        return { ...s, fillColor: '#888', fillOpacity: 0.7 };
+      },
+      onEachFeature: (f, l) => {
+        const hier = f.properties.hierarchy || '';
+        const w = f.properties.width_m || '';
+        const names = { primary:'주간선', secondary:'보조간선', local:'국지도로' };
+        l.bindTooltip(`${names[hier]||hier} (${w}m)`, { sticky: true });
+      }
+    }).addTo(layers.road);
+  }
+
+  // Layer 4: Zoning polygons
+  const zoningPresent = {};
+  if (data.zoning && data.zoning.features) {
+    L.geoJSON(data.zoning, {
+      style: f => {
+        const code = f.properties.zone_code || 'R4';
+        const color = ZONING_COLORS[code] || '#888';
+        return { color: '#333', weight: 1.5, fillColor: color, fillOpacity: 0.6 };
+      },
+      onEachFeature: (f, l) => {
+        const code = f.properties.zone_code || '';
+        const name = f.properties.zone_name || code;
+        const area = (f.properties.area_m2 / 10000).toFixed(2);
+        l.bindTooltip(`${name}<br>${area}ha`, { sticky: true });
+        zoningPresent[code] = f.properties.zone_name || code;
+      }
+    }).addTo(layers.zoning);
+  }
+
+  // Layer 5: Facilities (Polygon only - NO circles!)
+  if (data.facilities && data.facilities.features) {
+    L.geoJSON(data.facilities, {
+      style: f => {
+        const ftype = f.properties.facility_type || '';
+        const color = FACILITY_COLORS_MAP[ftype] || '#4169E1';
+        return { color: '#fff', weight: 2, fillColor: color, fillOpacity: 0.85 };
+      },
+      onEachFeature: (f, l) => {
+        const name = FACILITY_NAMES[f.properties.facility_type] || f.properties.facility_name || f.properties.facility_type;
+        const area = f.properties.area_m2 ? (f.properties.area_m2/10000).toFixed(3) + 'ha' : '';
+        l.bindTooltip(`${name}${area ? ' ('+area+')' : ''}`, { permanent: false, direction: 'center' });
+      }
+    }).addTo(layers.facility);
+  }
+
+  // Layer 6: Entry point markers (red circle markers - these are UI markers, not facilities)
+  if (data.entry_points) {
+    data.entry_points.forEach(ep => {
+      const [lon, lat] = ep.point_wgs84;
+      const marker = L.circleMarker([lat, lon], {
+        radius: 8, color: '#e94560', fillColor: '#e94560', fillOpacity: 0.9, weight: 2
+      });
+      const roadName = ep.road_name || '미명도로';
+      marker.bindTooltip(`진입점: ${roadName}<br>폭원: ${ep.road_width_m}m<br>방향: ${ep.angle_deg.toFixed(0)}°`, { direction: 'top' });
+      marker.addTo(layers.entryPoint);
+    });
+  }
+
+  // Layer 7: Block labels
+  if (data.blocks && data.blocks.features) {
+    data.blocks.features.forEach(f => {
+      if (f.geometry && f.geometry.type === 'Polygon') {
+        const coords = f.geometry.coordinates[0];
+        let lat = 0, lng = 0;
+        coords.forEach(c => { lng += c[0]; lat += c[1]; });
+        lat /= coords.length; lng /= coords.length;
+        const bid = f.properties.block_id || '';
+        const label = L.marker([lat, lng], {
+          icon: L.divIcon({
+            className: 'block-label',
+            html: `<span>${bid}</span>`,
+            iconSize: [40, 14],
+            iconAnchor: [20, 7],
+          }),
+          interactive: false,
+        });
+        label.addTo(layers.blockLabel);
+      }
+    });
+  }
+
+  // Layer 8: Subway station emoji markers
+  if (data.subway_stations) {
+    data.subway_stations.forEach(st => {
+      const icon = L.divIcon({
+        className: '',
+        html: `<div style="font-size:18px; text-shadow:0 0 3px #000;">🚇</div>`,
+        iconSize: [24, 24], iconAnchor: [12, 12],
+      });
+      L.marker([st.lat, st.lon], { icon })
+        .bindTooltip(st.name, { direction: 'top' })
+        .addTo(layers.subway);
+    });
+  }
+
+  // Fit map to boundary
+  try {
+    const coords = boundary.coordinates[0].map(c => [c[1], c[0]]);
+    map.fitBounds(L.latLngBounds(coords), { padding: [30, 30] });
+  } catch(e) {}
+
+  // Update legend
+  updateLegend(zoningPresent);
+
+  // Update stats panel
+  updateStats(data);
+  updateValidation(data.validation);
+  updateContext(data);
+  updateReport(data);
+}
+
+// =====================================================
+// UPDATE LEGEND
+// =====================================================
+function updateLegend(zoningPresent) {
+  const legend = document.getElementById('map-legend');
+  const items = document.getElementById('legend-items');
+  items.innerHTML = '';
+
+  Object.entries(zoningPresent).forEach(([code, name]) => {
+    const color = ZONING_COLORS[code] || '#888';
+    items.innerHTML += `
+      <div class="legend-item">
+        <div class="legend-color" style="background:${color}"></div>
+        <span>${name}</span>
+      </div>`;
+  });
+
+  // Add facility legend
+  items.innerHTML += `<div style="margin-top:6px; font-size:10px; color:#e94560; font-weight:bold;">공공시설</div>`;
+  Object.entries(FACILITY_NAMES).forEach(([type, name]) => {
+    const color = FACILITY_COLORS_MAP[type] || '#888';
+    items.innerHTML += `
+      <div class="legend-item">
+        <div class="legend-color" style="background:${color}"></div>
+        <span>${name}</span>
+      </div>`;
+  });
+
+  legend.style.display = 'block';
+}
+
+// =====================================================
+// UPDATE STATS TAB
+// =====================================================
+function updateStats(data) {
+  document.getElementById('stats-placeholder').style.display = 'none';
+  document.getElementById('stats-content').style.display = 'block';
+
+  const sa = data.site_analysis || {};
+  document.getElementById('s-area').textContent = sa.area_ha ? `${sa.area_ha.toFixed(2)}ha (${Math.round(sa.area_m2).toLocaleString()}㎡)` : '-';
+  document.getElementById('s-perimeter').textContent = sa.perimeter_m ? `${sa.perimeter_m.toFixed(0)}m` : '-';
+  document.getElementById('s-shape').textContent = sa.shape_index ? sa.shape_index.toFixed(3) : '-';
+  document.getElementById('s-entry').textContent = (data.entry_points || []).length + '개';
+  document.getElementById('s-blocks').textContent = (data.block_stats || {}).count || '-';
+
+  // Road gauge
+  const rs = data.road_stats || {};
+  const roadPct = ((rs.road_ratio || 0) * 100);
+  const roadGood = roadPct >= 20 && roadPct <= 30;
+  document.getElementById('gauge-road-val').textContent = roadPct.toFixed(1) + '%';
+  const gaugeRoad = document.getElementById('gauge-road');
+  gaugeRoad.style.width = Math.min(roadPct * 2, 100) + '%';
+  gaugeRoad.className = 'gauge-fill ' + (roadGood ? 'good' : 'bad');
+  document.getElementById('s-road-len').textContent = rs.total_length_m ? (rs.total_length_m / 1000).toFixed(2) + 'km' : '-';
+  document.getElementById('s-road-area').textContent = rs.road_area_m2 ? Math.round(rs.road_area_m2).toLocaleString() + '㎡' : '-';
+
+  // Green gauge
+  const zs = data.zoning_stats || {};
+  let greenArea = 0;
+  Object.entries(zs).forEach(([code, stat]) => {
+    if (['GN', 'PK'].includes(code)) greenArea += stat.area_m2 || 0;
+  });
+  const totalArea = sa.area_m2 || 1;
+  const greenPct = (greenArea / totalArea * 100);
+  const greenGood = greenPct >= 10;
+  document.getElementById('gauge-green-val').textContent = greenPct.toFixed(1) + '%';
+  const gaugeGreen = document.getElementById('gauge-green');
+  gaugeGreen.style.width = Math.min(greenPct * 2.5, 100) + '%';
+  gaugeGreen.className = 'gauge-fill ' + (greenGood ? 'good' : 'bad');
+
+  // Zoning table
+  const tbody = document.getElementById('zoning-tbody');
+  tbody.innerHTML = '';
+  Object.entries(zs).sort((a,b) => (b[1].area_m2||0) - (a[1].area_m2||0)).forEach(([code, stat]) => {
+    const color = ZONING_COLORS[code] || '#888';
+    tbody.innerHTML += `<tr>
+      <td><span class="zoning-color-cell" style="background:${color}; border:1px solid #333"></span></td>
+      <td>${stat.name || code}</td>
+      <td>${(stat.area_ha||0).toFixed(2)}</td>
+      <td>${((stat.ratio||0)*100).toFixed(1)}%</td>
+    </tr>`;
+  });
+
+  // Population estimates
+  let resArea = 0, resHouseholds = 0;
+  Object.entries(zs).forEach(([code, stat]) => {
+    if (['R1','R2','R3','R4','R5','RQ'].includes(code)) {
+      const area = stat.area_m2 || 0;
+      const far = stat.far_max || 150;
+      // Rough: 50% BCR, floor area * 0.5 / 60 sqm per household
+      const floorArea = area * (far / 100) * 0.5;
+      resHouseholds += floorArea / 60;
+      resArea += area;
+    }
+  });
+  const estPop = Math.round(resHouseholds * 2.5);
+  document.getElementById('s-households').textContent = Math.round(resHouseholds).toLocaleString() + ' 세대';
+  document.getElementById('s-population').textContent = estPop.toLocaleString() + ' 명';
+
+  const greenPerPerson = estPop > 0 ? (greenArea / estPop).toFixed(1) : '-';
+  document.getElementById('s-green-per').textContent = greenPerPerson + '㎡/인';
+
+  const cov = data.coverage || {};
+  document.getElementById('s-park-cov').textContent = ((cov.park_250m_ratio || 0) * 100).toFixed(1) + '%';
+}
+
+// =====================================================
+// UPDATE VALIDATION TAB
+// =====================================================
+function updateValidation(val) {
+  if (!val) return;
+  document.getElementById('val-placeholder').style.display = 'none';
+  document.getElementById('val-content').style.display = 'block';
+
+  const score = val.score || 0;
+  document.getElementById('score-num').textContent = score;
+  const circle = document.getElementById('score-circle');
+  const color = score >= 80 ? '#2ecc71' : score >= 60 ? '#f39c12' : '#e94560';
+  circle.style.borderColor = color;
+  document.getElementById('score-num').style.color = color;
+
+  function renderChecks(items, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    items.forEach(item => {
+      const passClass = item.pass ? 'pass' : 'fail';
+      const icon = item.pass ? '✅' : '❌';
+      container.innerHTML += `
+        <li class="check-item ${passClass}">
+          <span class="icon">${icon}</span>
+          <div>
+            <div>${item.item}</div>
+            <div class="detail">${item.value} / 기준: ${item.standard}</div>
+          </div>
+        </li>`;
+    });
+  }
+
+  renderChecks(val.required || [], 'required-list');
+  renderChecks(val.recommended || [], 'recommended-list');
+}
+
+// =====================================================
+// UPDATE CONTEXT TAB
+// =====================================================
+function updateContext(data) {
+  document.getElementById('ctx-placeholder').style.display = 'none';
+  document.getElementById('ctx-content').style.display = 'block';
+
+  const ca = data.context_analysis || {};
+  document.getElementById('adj-n').textContent = ca.adjacent_use_north || '-';
+  document.getElementById('adj-s').textContent = ca.adjacent_use_south || '-';
+  document.getElementById('adj-e').textContent = ca.adjacent_use_east || '-';
+  document.getElementById('adj-w').textContent = ca.adjacent_use_west || '-';
+  document.getElementById('dominant-use').textContent = ca.dominant_surrounding_use || '-';
+  document.getElementById('subway-name').textContent = ca.nearest_subway_name || '없음';
+  document.getElementById('subway-dist').textContent = ca.nearest_subway_m ? ca.nearest_subway_m.toFixed(0) + 'm' : '-';
+  document.getElementById('tod-zone').textContent = ca.is_tod_zone ? '✅ 역세권(500m 이내)' : '❌ 비역세권';
+
+  // Entry points
+  const entries = data.entry_points || [];
+  const entryEl = document.getElementById('entry-list');
+  if (entries.length === 0) {
+    entryEl.innerHTML = '<span style="color:#555">기존 도로 진입점 없음</span>';
+  } else {
+    entryEl.innerHTML = entries.map(ep => {
+      const rn = ep.road_name || '미명도로';
+      return `<div class="info-badge active">🚗 ${rn} (${ep.road_width_m}m)</div>`;
+    }).join('');
+  }
+
+  // Recommendations
+  const recs = ca.recommendations || [];
+  const recEl = document.getElementById('recommendations');
+  if (recs.length === 0) {
+    recEl.innerHTML = '<span style="color:#555">권고사항 없음</span>';
+  } else {
+    recEl.innerHTML = recs.map(r => `<div class="rec-item">💡 ${r}</div>`).join('');
+  }
+
+  // Similar cases
+  const cases = (data.site_analysis || {}).similar_cases || [];
+  const caseEl = document.getElementById('similar-cases');
+  if (cases.length === 0) {
+    caseEl.innerHTML = '<span style="color:#555">유사 사례 없음</span>';
+  } else {
+    caseEl.innerHTML = cases.map(c => `
+      <div style="background:#0f3460; border-radius:4px; padding:7px; margin-bottom:5px; font-size:11px;">
+        <div style="color:#e94560; font-weight:bold;">${c.name} <span style="color:#aaa; font-weight:normal;">(유사도 ${((c.similarity_score||0)*100).toFixed(0)}%)</span></div>
+        <div style="color:#aaa; margin-top:2px;">${c.area_ha}ha / ${c.population.toLocaleString()}명</div>
+        <div style="color:#888; margin-top:2px; font-size:10px;">${c.lessons || ''}</div>
+      </div>`).join('');
+  }
+}
+
+// =====================================================
+// UPDATE REPORT TAB
+// =====================================================
+function updateReport(data) {
+  document.getElementById('rpt-placeholder').style.display = 'none';
+  document.getElementById('rpt-content').style.display = 'block';
+
+  const sa = data.site_analysis || {};
+  const ca = data.context_analysis || {};
+  const rs = data.road_stats || {};
+  const zs = data.zoning_stats || {};
+  const siteName = document.getElementById('site-name').value;
+  const devType = document.getElementById('dev-type').value;
+  const program = document.getElementById('program').value;
+
+  // Overview
+  document.getElementById('rpt-overview').textContent =
+    `계획 구역: ${siteName}\n` +
+    `개발 유형: ${devType} / 프로그램: ${program}\n` +
+    `대상지 면적: ${(sa.area_ha||0).toFixed(2)}ha\n` +
+    `형상지수: ${(sa.shape_index||0).toFixed(3)} (1에 가까울수록 정형)\n` +
+    `진입점: ${(data.entry_points||[]).length}개\n` +
+    `지형: ${sa.terrain_type || '평지'}`;
+
+  // Rationale
+  document.getElementById('rpt-rationale').textContent = data.design_rationale || '-';
+
+  // Roads
+  const roadLines = [];
+  Object.entries(rs.by_hierarchy || {}).forEach(([h, info]) => {
+    const names = {primary:'주간선도로', secondary:'보조간선도로', local:'국지도로'};
+    roadLines.push(`${names[h]||h}: ${info.count}개 / ${(info.total_length_m/1000).toFixed(2)}km`);
+  });
+  document.getElementById('rpt-roads').textContent =
+    `총 도로 연장: ${(rs.total_length_m/1000).toFixed(2)}km\n` +
+    `도로 면적: ${Math.round(rs.road_area_m2||0).toLocaleString()}㎡\n` +
+    `도로율: ${((rs.road_ratio||0)*100).toFixed(1)}%\n\n` +
+    roadLines.join('\n');
+
+  // Facilities
+  const fac = data.facilities || {};
+  const facFeatures = fac.features || [];
+  const facCounts = {};
+  facFeatures.forEach(f => {
+    const ft = f.properties.facility_type || '기타';
+    facCounts[ft] = (facCounts[ft] || 0) + 1;
+  });
+  const cov = data.coverage || {};
+  const facLines = Object.entries(facCounts).map(([k,v]) => {
+    return `${FACILITY_NAMES[k]||k}: ${v}개`;
+  });
+  document.getElementById('rpt-facilities').textContent =
+    facLines.join('\n') + '\n\n' +
+    `공원 250m 커버리지: ${((cov.park_250m_ratio||0)*100).toFixed(1)}%\n` +
+    `공원 500m 커버리지: ${((cov.park_500m_ratio||0)*100).toFixed(1)}%\n` +
+    `학교 500m 커버리지: ${((cov.school_500m_ratio||0)*100).toFixed(1)}%`;
+}
+
+// =====================================================
+// EXPORT REPORT
+// =====================================================
+function exportReport() {
+  const siteName = document.getElementById('site-name').value;
+  const overview = document.getElementById('rpt-overview').textContent;
+  const rationale = document.getElementById('rpt-rationale').textContent;
+  const roads = document.getElementById('rpt-roads').textContent;
+  const facilities = document.getElementById('rpt-facilities').textContent;
+
+  const content = `한국 도시설계 토지이용계획 보고서
+생성일: ${new Date().toLocaleDateString('ko-KR')}
+========================================
+
+1. 계획 개요
+${overview}
+
+2. 토지이용 계획
+${rationale}
+
+3. 도로망 계획
+${roads}
+
+4. 공공시설 계획
+${facilities}
+`;
+
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `토지이용계획_${siteName}_${new Date().toISOString().split('T')[0]}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// =====================================================
+// KEYBOARD SHORTCUTS
+// =====================================================
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    // Cancel drawing
+    map.off('click');
+  }
+});
+
+// Tab switching via keyboard
+document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-content')[i].classList.add('active');
+  });
+});
+
+// Initial status
+setStatus('✏ [대상지 경계 그리기] 버튼으로 시작하세요.', '');
+</script>
+</body>
+</html>

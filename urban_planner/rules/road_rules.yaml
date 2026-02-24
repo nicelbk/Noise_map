@@ -1,0 +1,53 @@
+# 도로 설계 기준 (도시·군계획시설의 결정·구조 및 설치기준에 관한 규칙)
+road_hierarchy:
+  primary:
+    name: "주간선도로"
+    width_min_m: 20
+    width_max_m: 35
+    width_default_m: 25
+    block_area_target_m2: 50000
+    dead_end_max_m: null
+    speed_kph: 60
+  secondary:
+    name: "보조간선도로"
+    width_min_m: 12
+    width_max_m: 20
+    width_default_m: 15
+    block_area_target_m2: 10000
+    dead_end_max_m: null
+    speed_kph: 40
+  local:
+    name: "국지도로"
+    width_min_m: 6
+    width_max_m: 12
+    width_default_m: 8
+    block_area_target_m2: 5000
+    dead_end_max_m: 35
+    speed_kph: 20
+
+road_ratios:
+  min: 0.20
+  target: 0.25
+  max: 0.30
+
+# OSM 도로 태그 → 위계 매핑
+osm_to_hierarchy:
+  motorway: primary
+  trunk: primary
+  primary: primary
+  secondary: secondary
+  tertiary: secondary
+  residential: local
+  service: local
+  unclassified: local
+
+# 도로 폭원 추정 (OSM highway 태그 기준)
+osm_width_estimate_m:
+  motorway: 30
+  trunk: 25
+  primary: 20
+  secondary: 15
+  tertiary: 12
+  residential: 8
+  service: 6
+  unclassified: 8
