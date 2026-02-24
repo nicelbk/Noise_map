@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>한국 도시설계 토지이용계획 수립 툴</title>
 
-  <!-- Leaflet.js -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+  <!-- Leaflet.js (로컬) -->
+  <link rel="stylesheet" href="/static/lib/leaflet.css"/>
+  <link rel="stylesheet" href="/static/lib/leaflet-geoman.css"/>
+  <script src="/static/lib/leaflet.js"></script>
+  <script src="/static/lib/leaflet-geoman.min.js"></script>
 
   <style>
     /* ─── 기본 레이아웃 ─────────────────────── */
@@ -490,48 +490,56 @@ function initMap() {
   drawnItems = new L.FeatureGroup();
   map.addLayer(drawnItems);
 
-  // Leaflet.draw 컨트롤
-  drawControl = new L.Control.Draw({
-    edit: {
-      featureGroup: drawnItems,
-    },
-    draw: {
-      polygon: {
-        allowIntersection: false,
-        showArea: true,
-        metric: true,
-        shapeOptions: {
-          color: '#64b5f6',
-          fillColor: '#1565c0',
-          fillOpacity: 0.2,
-          weight: 2,
-        },
-      },
-      rectangle: false,
-      circle: false,
-      circlemarker: false,
-      polyline: false,
-      marker: false,
-    },
+  // leaflet-geoman 컨트롤 초기화
+  map.pm.addControls({
+    position: 'topleft',
+    drawMarker: false,
+    drawCircleMarker: false,
+    drawPolyline: false,
+    drawRectangle: false,
+    drawCircle: false,
+    drawText: false,
+    editMode: true,
+    dragMode: false,
+    cutPolygon: false,
+    removalMode: true,
+    rotateMode: false,
   });
-  map.addControl(drawControl);
 
-  // 그리기 이벤트 처리
-  map.on(L.Draw.Event.CREATED, function(e) {
-    drawnItems.clearLayers();
+  // 다각형 그리기 스타일 설정
+  map.pm.setGlobalOptions({
+    pathOptions: {
+      color: '#64b5f6',
+      fillColor: '#1565c0',
+      fillOpacity: 0.2,
+      weight: 2,
+    },
+    allowSelfIntersection: false,
+  });
+
+  // 그리기 완료 이벤트
+  map.on('pm:create', function(e) {
+    // 기존 레이어 제거 (하나만 허용)
+    drawnItems.eachLayer(function(layer) {
+      if (layer !== e.layer) drawnItems.removeLayer(layer);
+    });
     drawnItems.addLayer(e.layer);
+    currentBoundary = e.layer.toGeoJSON();
+    onBoundarySet(e.layer);
+
+    // 그리기 모드 자동 종료
+    map.pm.disableDraw();
+  });
+
+  // 편집 완료 이벤트
+  map.on('pm:edit', function(e) {
     currentBoundary = e.layer.toGeoJSON();
     onBoundarySet(e.layer);
   });
 
-  map.on(L.Draw.Event.EDITED, function(e) {
-    e.layers.eachLayer(function(layer) {
-      currentBoundary = layer.toGeoJSON();
-      onBoundarySet(layer);
-    });
-  });
-
-  map.on(L.Draw.Event.DELETED, function() {
+  // 레이어 삭제 이벤트
+  map.on('pm:remove', function() {
+    drawnItems.clearLayers();
     currentBoundary = null;
     document.getElementById('draw-hint').style.display = 'block';
     document.getElementById('boundary-info').style.display = 'none';
