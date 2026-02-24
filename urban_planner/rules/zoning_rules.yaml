@@ -1,0 +1,326 @@
+# 용도지역별 규정 (국토의 계획 및 이용에 관한 법률 시행령 기준)
+# 기준: 국토계획법 시행령 별표
+
+zoning_types:
+  # 주거지역
+  제1종전용주거:
+    code: R1E
+    category: 주거
+    color: "#FFE4E1"
+    far_default: 50      # 용적률 (%)
+    far_seoul: 50
+    bcr: 50              # 건폐율 (%)
+    max_height: null     # 층수 제한 (없으면 null)
+    floors_max: 2
+    description: "단독주택 중심의 저층 주거"
+    allowed_uses:
+      - 단독주택
+      - 제1종근린생활시설(일부)
+
+  제2종전용주거:
+    code: R2E
+    category: 주거
+    color: "#FFD0C8"
+    far_default: 100
+    far_seoul: 100
+    bcr: 40
+    floors_max: 4
+    description: "공동주택 중심의 저층 주거"
+    allowed_uses:
+      - 단독주택
+      - 공동주택(4층 이하)
+      - 제1종근린생활시설
+
+  제1종일반주거:
+    code: R1G
+    category: 주거
+    color: "#FFB6C1"
+    far_default: 100
+    far_seoul: 100
+    bcr: 60
+    floors_max: 4
+    description: "저층 주거지역"
+    allowed_uses:
+      - 단독주택
+      - 공동주택(4층 이하)
+      - 제1종근린생활시설
+      - 교육시설
+
+  제2종일반주거:
+    code: R2G
+    category: 주거
+    color: "#FF91A4"
+    far_default: 150
+    far_seoul: 200
+    bcr: 60
+    floors_max: null
+    description: "중층 주거지역"
+    allowed_uses:
+      - 단독주택
+      - 공동주택
+      - 제1종·2종근린생활시설
+      - 교육시설
+      - 종교시설
+
+  제3종일반주거:
+    code: R3G
+    category: 주거
+    color: "#FF69B4"
+    far_default: 200
+    far_seoul: 300
+    bcr: 50
+    floors_max: null
+    description: "중고층 주거지역"
+    allowed_uses:
+      - 단독주택
+      - 공동주택
+      - 제1종·2종근린생활시설
+      - 교육·종교·의료시설
+
+  준주거:
+    code: QR
+    category: 주거
+    color: "#DDA0DD"
+    far_default: 400
+    far_seoul: 500
+    bcr: 70
+    floors_max: null
+    description: "주거+상업 혼합지역"
+    allowed_uses:
+      - 주거
+      - 근린생활시설
+      - 판매시설(일부)
+      - 업무시설
+
+  # 상업지역
+  중심상업:
+    code: CC
+    category: 상업
+    color: "#FF4500"
+    far_default: 1000
+    far_seoul: 1000
+    bcr: 90
+    floors_max: null
+    description: "도심, 부도심의 상업·업무 중심지"
+    allowed_uses:
+      - 판매시설
+      - 업무시설
+      - 숙박시설
+      - 위락시설
+
+  일반상업:
+    code: GC
+    category: 상업
+    color: "#FF6347"
+    far_default: 800
+    far_seoul: 800
+    bcr: 80
+    floors_max: null
+    description: "일반 상업·업무 기능"
+    allowed_uses:
+      - 판매시설
+      - 업무시설
+      - 근린생활시설
+
+  근린상업:
+    code: NC
+    category: 상업
+    color: "#FF8C00"
+    far_default: 600
+    far_seoul: 600
+    bcr: 70
+    floors_max: null
+    description: "근린지역 일용품·서비스 공급"
+    allowed_uses:
+      - 근린생활시설
+      - 판매시설(소규모)
+      - 주거(일부)
+
+  유통상업:
+    code: DC
+    category: 상업
+    color: "#FFA500"
+    far_default: 600
+    far_seoul: 600
+    bcr: 80
+    floors_max: null
+    description: "도시 내·광역 유통기능"
+    allowed_uses:
+      - 판매시설
+      - 창고시설
+      - 운수시설
+
+  # 공업지역
+  전용공업:
+    code: EI
+    category: 공업
+    color: "#808080"
+    far_default: 300
+    far_seoul: 300
+    bcr: 70
+    floors_max: null
+    description: "중화학공업, 공해성 공업"
+    allowed_uses:
+      - 공장
+      - 창고시설
+      - 위험물취급시설
+
+  일반공업:
+    code: GI
+    category: 공업
+    color: "#A9A9A9"
+    far_default: 350
+    far_seoul: 350
+    bcr: 70
+    floors_max: null
+    description: "환경오염이 적은 공업"
+    allowed_uses:
+      - 공장
+      - 창고시설
+      - 지원시설
+
+  준공업:
+    code: QI
+    category: 공업
+    color: "#C0C0C0"
+    far_default: 400
+    far_seoul: 400
+    bcr: 70
+    floors_max: null
+    description: "경공업, 주거·상업 혼재"
+    allowed_uses:
+      - 공장(경공업)
+      - 주거
+      - 근린생활시설
+
+  # 녹지지역
+  보전녹지:
+    code: CG
+    category: 녹지
+    color: "#228B22"
+    far_default: 80
+    far_seoul: 80
+    bcr: 20
+    floors_max: 2
+    description: "도시 자연환경 보전"
+    allowed_uses:
+      - 임야
+      - 농지
+      - 공원
+
+  생산녹지:
+    code: PG
+    category: 녹지
+    color: "#32CD32"
+    far_default: 100
+    far_seoul: 100
+    bcr: 20
+    floors_max: 2
+    description: "농업적 생산을 위한 녹지"
+    allowed_uses:
+      - 농지
+      - 단독주택(일부)
+
+  자연녹지:
+    code: NG
+    category: 녹지
+    color: "#7CFC00"
+    far_default: 100
+    far_seoul: 100
+    bcr: 20
+    floors_max: null
+    description: "향후 도시용지 예비지"
+    allowed_uses:
+      - 농지
+      - 단독주택
+      - 근린생활시설(일부)
+
+  # 기타 (계획에서 생성)
+  공원:
+    code: PK
+    category: 공원녹지
+    color: "#90EE90"
+    far_default: 0
+    far_seoul: 0
+    bcr: 0
+    description: "도시공원"
+
+  공공시설:
+    code: PF
+    category: 공공
+    color: "#4169E1"
+    far_default: 200
+    far_seoul: 200
+    bcr: 60
+    description: "학교, 주민센터 등 공공시설"
+
+  도로:
+    code: RD
+    category: 도로
+    color: "#808080"
+    far_default: 0
+    far_seoul: 0
+    bcr: 0
+    description: "도로"
+
+# 용도 배치 원칙 (우선순위)
+placement_rules:
+  상업:
+    prefer: ["대로변", "교통결절점", "기존도로변"]
+    avoid: ["주거지 내부", "녹지 인접"]
+  준주거:
+    prefer: ["대로변", "상업 인접"]
+    avoid: ["최외곽"]
+  제3종일반주거:
+    prefer: ["보조간선도로변"]
+    avoid: ["최외곽"]
+  제2종일반주거:
+    prefer: ["내부", "조용한 위치"]
+    avoid: []
+  제1종일반주거:
+    prefer: ["외곽", "녹지 인접"]
+    avoid: ["대로변"]
+  공원:
+    prefer: ["주거 인접", "북측"]
+    avoid: ["상업지 내부"]
+  공공시설:
+    prefer: ["중심부", "접근성 좋은 위치"]
+    avoid: []
+
+# 프로그램별 기본 용도비율
+program_zoning_ratios:
+  주거중심:
+    residential: 0.55
+    commercial: 0.05
+    industrial: 0.0
+    green: 0.20
+    public: 0.10
+    road: 0.10
+  상업중심:
+    residential: 0.25
+    commercial: 0.35
+    industrial: 0.0
+    green: 0.15
+    public: 0.10
+    road: 0.15
+  혼합용도:
+    residential: 0.40
+    commercial: 0.15
+    industrial: 0.0
+    green: 0.20
+    public: 0.10
+    road: 0.15
+  자족도시:
+    residential: 0.35
+    commercial: 0.10
+    industrial: 0.10
+    green: 0.25
+    public: 0.10
+    road: 0.10
+  산업단지:
+    residential: 0.10
+    commercial: 0.05
+    industrial: 0.50
+    green: 0.15
+    public: 0.05
+    road: 0.15

@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한국 도시설계 토지이용계획 수립 툴</title>
+
+  <!-- Leaflet.js -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
+  <style>
+    /* ─── 기본 레이아웃 ─────────────────────── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; font-size: 13px; background: #1a1a2e; color: #e0e0e0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* ─── 헤더 ─────────────────────────────── */
+    #header {
+      background: linear-gradient(135deg, #0f3460, #16213e);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #2d4a6e;
+      flex-shrink: 0;
+    }
+    #header h1 { font-size: 16px; color: #64b5f6; font-weight: 700; }
+    #header .badge { background: #e53935; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
+
+    /* ─── 메인 레이아웃 ─────────────────────── */
+    #main { display: flex; flex: 1; overflow: hidden; }
+
+    /* ─── 패널 공통 ──────────────────────────── */
+    .panel { background: #16213e; border-right: 1px solid #2d4a6e; display: flex; flex-direction: column; overflow: hidden; }
+    .panel-header { padding: 8px 12px; background: #0f3460; font-size: 12px; font-weight: 700; color: #90caf9; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; border-bottom: 1px solid #2d4a6e; }
+    .panel-body { flex: 1; overflow-y: auto; padding: 10px; }
+    .panel-body::-webkit-scrollbar { width: 4px; }
+    .panel-body::-webkit-scrollbar-track { background: #0f3460; }
+    .panel-body::-webkit-scrollbar-thumb { background: #2d4a6e; border-radius: 2px; }
+
+    /* ─── 입력 패널 ─────────────────────────── */
+    #input-panel { width: 300px; flex-shrink: 0; }
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; font-size: 11px; color: #90caf9; margin-bottom: 4px; font-weight: 600; }
+    .form-group select, .form-group input[type="number"], .form-group input[type="text"] {
+      width: 100%; background: #0f3460; border: 1px solid #2d4a6e; border-radius: 4px;
+      color: #e0e0e0; padding: 6px 8px; font-size: 12px; outline: none;
+    }
+    .form-group select:focus, .form-group input:focus { border-color: #64b5f6; }
+
+    .priority-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .priority-item label { font-size: 10px; color: #b0bec5; margin-bottom: 2px; }
+    .priority-item input[type="range"] { width: 100%; accent-color: #64b5f6; }
+    .priority-item .val { font-size: 10px; color: #64b5f6; text-align: right; }
+
+    .section-title { font-size: 11px; color: #64b5f6; font-weight: 700; margin: 10px 0 6px; border-bottom: 1px solid #2d4a6e; padding-bottom: 4px; }
+
+    /* ─── 버튼 ───────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; }
+    .btn-primary { background: linear-gradient(135deg, #1565c0, #0d47a1); color: white; width: 100%; margin-top: 8px; }
+    .btn-primary:hover { background: linear-gradient(135deg, #1976d2, #1565c0); }
+    .btn-primary:disabled { background: #37474f; cursor: not-allowed; opacity: 0.6; }
+    .btn-sm { padding: 4px 10px; font-size: 11px; }
+    .btn-success { background: #2e7d32; color: white; }
+    .btn-success:hover { background: #388e3c; }
+    .btn-info { background: #00695c; color: white; }
+    .btn-info:hover { background: #00796b; }
+    .btn-danger { background: #c62828; color: white; }
+    .btn-danger:hover { background: #d32f2f; }
+    .btn-outline { background: transparent; border: 1px solid #2d4a6e; color: #b0bec5; }
+    .btn-outline:hover { border-color: #64b5f6; color: #64b5f6; }
+
+    /* ─── 지도 영역 ─────────────────────────── */
+    #map-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    #map-toolbar { padding: 6px 10px; background: #0f3460; display: flex; align-items: center; gap: 8px; flex-shrink: 0; border-bottom: 1px solid #2d4a6e; flex-wrap: wrap; }
+    #map { flex: 1; }
+    #map-status { padding: 4px 10px; background: #0a1628; font-size: 11px; color: #78909c; flex-shrink: 0; }
+
+    /* ─── 결과 패널 ─────────────────────────── */
+    #result-panel { width: 350px; flex-shrink: 0; border-right: none; border-left: 1px solid #2d4a6e; }
+
+    /* ─── 탭 ─────────────────────────────────── */
+    .tabs { display: flex; border-bottom: 1px solid #2d4a6e; flex-shrink: 0; }
+    .tab { flex: 1; padding: 7px 4px; text-align: center; cursor: pointer; font-size: 11px; color: #78909c; border-bottom: 2px solid transparent; transition: all 0.2s; }
+    .tab:hover { color: #90caf9; }
+    .tab.active { color: #64b5f6; border-bottom-color: #64b5f6; font-weight: 700; }
+    .tab-content { display: none; flex: 1; overflow-y: auto; padding: 10px; }
+    .tab-content.active { display: block; }
+    .tab-content::-webkit-scrollbar { width: 4px; }
+    .tab-content::-webkit-scrollbar-thumb { background: #2d4a6e; border-radius: 2px; }
+
+    /* ─── 카드 ───────────────────────────────── */
+    .card { background: #0f3460; border-radius: 6px; padding: 10px; margin-bottom: 8px; border: 1px solid #2d4a6e; }
+    .card-title { font-size: 11px; color: #90caf9; font-weight: 700; margin-bottom: 6px; }
+    .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid #1a3a5c; }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-label { color: #b0bec5; font-size: 11px; }
+    .stat-value { color: #e0e0e0; font-size: 11px; font-weight: 600; }
+    .stat-value.good { color: #81c784; }
+    .stat-value.warn { color: #ffb74d; }
+    .stat-value.bad { color: #e57373; }
+
+    /* ─── 검증 체크리스트 ───────────────────── */
+    .check-item { display: flex; align-items: flex-start; gap: 6px; padding: 4px 0; border-bottom: 1px solid #1a3a5c; }
+    .check-item:last-child { border-bottom: none; }
+    .check-icon { flex-shrink: 0; margin-top: 1px; }
+    .check-pass { color: #81c784; }
+    .check-fail { color: #e57373; }
+    .check-warn { color: #ffb74d; }
+    .check-desc { font-size: 11px; color: #b0bec5; flex: 1; }
+    .check-value { font-size: 10px; color: #78909c; margin-top: 2px; }
+
+    /* ─── 레이어 토글 ───────────────────────── */
+    .layer-toggle { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
+    .layer-name { font-size: 11px; color: #b0bec5; display: flex; align-items: center; gap: 6px; }
+    .layer-color { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+    .toggle-sw { position: relative; width: 32px; height: 16px; cursor: pointer; }
+    .toggle-sw input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; inset: 0; background: #37474f; border-radius: 8px; transition: 0.2s; }
+    .toggle-slider::before { content: ""; position: absolute; width: 12px; height: 12px; left: 2px; top: 2px; background: white; border-radius: 50%; transition: 0.2s; }
+    input:checked + .toggle-slider { background: #1565c0; }
+    input:checked + .toggle-slider::before { transform: translateX(16px); }
+
+    /* ─── 유사 사례 카드 ────────────────────── */
+    .case-card { background: #0f3460; border: 1px solid #2d4a6e; border-radius: 6px; padding: 8px; margin-bottom: 6px; cursor: pointer; transition: border-color 0.2s; }
+    .case-card:hover { border-color: #64b5f6; }
+    .case-name { font-size: 12px; font-weight: 700; color: #e0e0e0; }
+    .case-type { font-size: 10px; color: #90caf9; margin-top: 2px; }
+    .case-stats { display: flex; gap: 12px; margin-top: 6px; }
+    .case-stat { font-size: 10px; color: #78909c; }
+    .case-stat span { color: #b0bec5; font-weight: 600; }
+    .case-similarity { font-size: 10px; color: #ffb74d; }
+
+    /* ─── 대안 탭 ─────────────────────────── */
+    .alt-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+    .alt-tab { flex: 1; padding: 6px; text-align: center; background: #0f3460; border: 1px solid #2d4a6e; border-radius: 4px; cursor: pointer; font-size: 11px; color: #b0bec5; transition: all 0.2s; }
+    .alt-tab.active { background: #1565c0; border-color: #1565c0; color: white; font-weight: 700; }
+    .alt-content { display: none; }
+    .alt-content.active { display: block; }
+
+    /* ─── 리포트 ─────────────────────────────── */
+    #report-text { background: #0a1628; border: 1px solid #2d4a6e; border-radius: 4px; padding: 10px; font-family: 'D2Coding', 'Courier New', monospace; font-size: 11px; color: #90caf9; white-space: pre; overflow-x: auto; line-height: 1.6; }
+
+    /* ─── 로딩 오버레이 ─────────────────────── */
+    #loading { display: none; position: fixed; inset: 0; background: rgba(10,22,40,0.85); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+    #loading.show { display: flex; }
+    .spinner { width: 48px; height: 48px; border: 4px solid #2d4a6e; border-top-color: #64b5f6; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-msg { color: #90caf9; font-size: 14px; }
+    .loading-steps { color: #546e7a; font-size: 12px; text-align: center; line-height: 1.8; }
+
+    /* ─── 알림 ───────────────────────────────── */
+    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1565c0; color: white; padding: 10px 20px; border-radius: 6px; font-size: 12px; z-index: 9998; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    #toast.show { opacity: 1; }
+    #toast.error { background: #c62828; }
+    #toast.success { background: #2e7d32; }
+
+    /* ─── 팝업 ───────────────────────────────── */
+    .popup-content h3 { font-size: 13px; color: #1565c0; margin-bottom: 8px; }
+    .popup-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .popup-table td { padding: 3px 6px; border-bottom: 1px solid #e0e0e0; }
+    .popup-table td:first-child { color: #666; font-weight: 500; width: 120px; }
+
+    /* ─── 범례 ───────────────────────────────── */
+    .legend-item { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
+    .legend-color { width: 14px; height: 14px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; }
+    .legend-label { font-size: 10px; color: #b0bec5; }
+
+    /* ─── 그리기 도구 힌트 ─────────────────── */
+    .draw-hint { background: #0f3460; border: 1px solid #2d4a6e; border-radius: 4px; padding: 6px 10px; font-size: 11px; color: #90caf9; }
+
+    /* 내보내기 버튼 그룹 */
+    .export-group { display: flex; gap: 6px; }
+    .export-group .btn { flex: 1; }
+
+    /* 진행률 바 */
+    .progress-bar-wrap { background: #0f3460; border-radius: 4px; height: 6px; overflow: hidden; margin-top: 8px; }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, #1565c0, #42a5f5); width: 0%; transition: width 0.5s; border-radius: 4px; }
+
+    /* 오류 메시지 */
+    .error-msg { background: #3e1c1c; border: 1px solid #c62828; border-radius: 4px; padding: 8px 10px; font-size: 11px; color: #ef9a9a; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div id="header">
+  <h1>🏙️ 한국 도시설계 토지이용계획 수립 툴</h1>
+  <span class="badge">BETA</span>
+  <div style="margin-left:auto; font-size:11px; color:#546e7a;">지구단위계획 · 국토계획법 준수 · EPSG:5179</div>
+</div>
+
+<!-- 메인 -->
+<div id="main">
+
+  <!-- ══════════ 입력 패널 ══════════ -->
+  <div class="panel" id="input-panel">
+    <div class="panel-header">📋 설계 입력</div>
+    <div class="panel-body">
+
+      <!-- 그리기 힌트 -->
+      <div class="draw-hint" id="draw-hint">
+        ✏️ 지도에서 <strong>다각형 도구</strong>를 클릭하여<br>대상지를 그려주세요.
+      </div>
+      <div id="boundary-info" style="display:none; margin-top:6px;">
+        <div class="card" style="padding:6px 10px;">
+          <div style="font-size:11px; color:#81c784;">✅ 대상지 설정 완료</div>
+          <div id="boundary-area" style="font-size:12px; color:#e0e0e0; margin-top:2px;"></div>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:10px;">📍 기본 정보</div>
+
+      <div class="form-group">
+        <label>대상지 명칭</label>
+        <input type="text" id="site-name" value="테스트 구역" placeholder="예: 홍길동 구역">
+      </div>
+
+      <div class="form-group">
+        <label>개발 유형</label>
+        <select id="development-type">
+          <option value="신규개발">신규개발</option>
+          <option value="재개발">재개발</option>
+          <option value="재건축">재건축</option>
+          <option value="도시재생">도시재생</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>개발 프로그램</label>
+        <select id="program">
+          <option value="혼합용도">혼합용도</option>
+          <option value="주거중심">주거중심</option>
+          <option value="상업중심">상업중심</option>
+          <option value="자족도시">자족도시</option>
+          <option value="산업단지">산업단지</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>지역 구분</label>
+        <select id="region">
+          <option value="서울">서울</option>
+          <option value="경기" selected>경기</option>
+          <option value="기타">기타 광역시/도</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>대중교통 접근성</label>
+        <select id="transit-access">
+          <option value="없음">없음</option>
+          <option value="간선버스">간선버스 정류장</option>
+          <option value="역세권">지하철역 (역세권)</option>
+        </select>
+      </div>
+
+      <div class="section-title">📊 목표 지표</div>
+
+      <div class="form-group">
+        <label>목표 수용인구 (0=자동계산)</label>
+        <input type="number" id="target-population" value="0" min="0">
+      </div>
+
+      <div class="form-group">
+        <label>최소 녹지율 (%)</label>
+        <input type="number" id="green-ratio" value="15" min="10" max="50">
+      </div>
+
+      <div class="form-group">
+        <label>목표 도로율 (%)</label>
+        <input type="number" id="road-ratio" value="25" min="20" max="35">
+      </div>
+
+      <div class="section-title">⚖️ 설계 우선순위 (1-5점)</div>
+      <div class="priority-grid">
+        <div class="priority-item">
+          <label>밀도/수익성</label>
+          <input type="range" id="p-density" min="1" max="5" value="3" oninput="updatePVal('density',this.value)">
+          <div class="val" id="v-density">3</div>
+        </div>
+        <div class="priority-item">
+          <label>녹지/환경</label>
+          <input type="range" id="p-green" min="1" max="5" value="3" oninput="updatePVal('green',this.value)">
+          <div class="val" id="v-green">3</div>
+        </div>
+        <div class="priority-item">
+          <label>보행환경</label>
+          <input type="range" id="p-walk" min="1" max="5" value="3" oninput="updatePVal('walk',this.value)">
+          <div class="val" id="v-walk">3</div>
+        </div>
+        <div class="priority-item">
+          <label>공공시설</label>
+          <input type="range" id="p-public" min="1" max="5" value="3" oninput="updatePVal('public',this.value)">
+          <div class="val" id="v-public">3</div>
+        </div>
+        <div class="priority-item" style="grid-column: span 2;">
+          <label>교통편의</label>
+          <input type="range" id="p-traffic" min="1" max="5" value="3" oninput="updatePVal('traffic',this.value)">
+          <div class="val" id="v-traffic">3</div>
+        </div>
+      </div>
+
+      <!-- 계획 수립 버튼 -->
+      <button class="btn btn-primary" id="plan-btn" onclick="startPlanning()" disabled>
+        🚀 토지이용계획 수립
+      </button>
+
+      <div id="plan-error" class="error-msg" style="display:none;"></div>
+
+      <!-- 초기화 버튼 -->
+      <button class="btn btn-outline btn-sm" style="width:100%; margin-top:6px;" onclick="resetAll()">
+        🗑️ 초기화
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════ 지도 영역 ══════════ -->
+  <div id="map-area">
+    <div id="map-toolbar">
+      <span style="font-size:11px; color:#78909c;">레이어:</span>
+
+      <!-- 레이어 토글 버튼들 -->
+      <button class="btn btn-sm btn-outline" onclick="toggleLayer('masterplan')" id="btn-masterplan">용도지역</button>
+      <button class="btn btn-sm btn-outline" onclick="toggleLayer('roads')" id="btn-roads">도로</button>
+      <button class="btn btn-sm btn-outline" onclick="toggleLayer('blocks')" id="btn-blocks">블록</button>
+      <button class="btn btn-sm btn-outline" onclick="toggleLayer('facilities')" id="btn-facilities">공공시설</button>
+
+      <div style="margin-left:auto; display:flex; gap:6px;">
+        <button class="btn btn-sm btn-info" onclick="exportPlan('geojson')">📥 GeoJSON</button>
+        <button class="btn btn-sm btn-info" onclick="exportPlan('png')">🖼️ PNG</button>
+      </div>
+    </div>
+
+    <div id="map"></div>
+    <div id="map-status">준비 완료 · 지도에서 대상지를 그려주세요</div>
+  </div>
+
+  <!-- ══════════ 결과 패널 ══════════ -->
+  <div class="panel" id="result-panel">
+    <div class="panel-header">📊 분석 결과</div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('stats')">통계</div>
+      <div class="tab" onclick="switchTab('validation')">법규</div>
+      <div class="tab" onclick="switchTab('cases')">사례</div>
+      <div class="tab" onclick="switchTab('alt')">대안</div>
+      <div class="tab" onclick="switchTab('report')">리포트</div>
+    </div>
+
+    <!-- 통계 탭 -->
+    <div class="tab-content active" id="tab-stats">
+      <div id="stats-placeholder" style="color:#546e7a; font-size:12px; text-align:center; padding:30px 10px;">
+        계획 수립 후 통계가 표시됩니다.
+      </div>
+      <div id="stats-content" style="display:none;">
+        <!-- JS에서 동적 생성 -->
+      </div>
+    </div>
+
+    <!-- 법규 검증 탭 -->
+    <div class="tab-content" id="tab-validation">
+      <div id="validation-placeholder" style="color:#546e7a; font-size:12px; text-align:center; padding:30px 10px;">
+        계획 수립 후 법규 검증 결과가 표시됩니다.
+      </div>
+      <div id="validation-content" style="display:none;">
+      </div>
+    </div>
+
+    <!-- 유사 사례 탭 -->
+    <div class="tab-content" id="tab-cases">
+      <div id="cases-placeholder" style="color:#546e7a; font-size:12px; text-align:center; padding:30px 10px;">
+        계획 수립 후 유사 사례가 표시됩니다.
+      </div>
+      <div id="cases-content" style="display:none;">
+      </div>
+    </div>
+
+    <!-- 대안 탭 -->
+    <div class="tab-content" id="tab-alt">
+      <div id="alt-placeholder" style="color:#546e7a; font-size:12px; text-align:center; padding:30px 10px;">
+        계획 수립 후 대안이 표시됩니다.
+      </div>
+      <div id="alt-content" style="display:none;">
+      </div>
+    </div>
+
+    <!-- 리포트 탭 -->
+    <div class="tab-content" id="tab-report">
+      <div id="report-placeholder" style="color:#546e7a; font-size:12px; text-align:center; padding:30px 10px;">
+        계획 수립 후 상세 리포트가 표시됩니다.
+      </div>
+      <pre id="report-text" style="display:none;"></pre>
+    </div>
+  </div>
+</div>
+
+<!-- 로딩 오버레이 -->
+<div id="loading">
+  <div class="spinner"></div>
+  <div class="loading-msg">토지이용계획 수립 중...</div>
+  <div class="loading-steps" id="loading-steps">
+    Stage 0: 현황 분석<br>
+    Stage 1: 마스터플랜 수립<br>
+    Stage 2: 도로망 생성<br>
+    Stage 3: 블록 분할<br>
+    Stage 4: 공공시설 배치
+  </div>
+  <div class="progress-bar-wrap" style="width:280px;">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+</div>
+
+<!-- 알림 토스트 -->
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// 전역 변수
+// ══════════════════════════════════════════════════════
+let map = null;
+let drawnItems = null;
+let drawControl = null;
+let currentBoundary = null;
+let planResult = null;
+
+// 레이어 그룹
+const layers = {
+  masterplan: null,
+  roads: null,
+  blocks: null,
+  facilities: null,
+};
+const layerVisible = {
+  masterplan: true,
+  roads: true,
+  blocks: true,
+  facilities: true,
+};
+
+// 용도지역 색상
+const ZONING_COLORS = {
+  "제1종전용주거": "#FFE4E1",
+  "제2종전용주거": "#FFD0C8",
+  "제1종일반주거": "#FFB6C1",
+  "제2종일반주거": "#FF91A4",
+  "제3종일반주거": "#FF69B4",
+  "준주거":        "#DDA0DD",
+  "중심상업":      "#FF4500",
+  "일반상업":      "#FF6347",
+  "근린상업":      "#FF8C00",
+  "유통상업":      "#FFA500",
+  "전용공업":      "#808080",
+  "일반공업":      "#A9A9A9",
+  "준공업":        "#C0C0C0",
+  "보전녹지":      "#228B22",
+  "생산녹지":      "#32CD32",
+  "자연녹지":      "#7CFC00",
+  "공원":          "#90EE90",
+  "공공시설":      "#4169E1",
+  "도로":          "#AAAAAA",
+};
+
+const FACILITY_COLORS = {
+  "근린공원":   "#32CD32",
+  "어린이공원": "#90EE90",
+  "초등학교":   "#4169E1",
+  "중학교":     "#1E90FF",
+  "주민센터":   "#9370DB",
+};
+
+// ══════════════════════════════════════════════════════
+// 지도 초기화
+// ══════════════════════════════════════════════════════
+function initMap() {
+  map = L.map('map', {
+    center: [37.5665, 126.9780],  // 서울 중심
+    zoom: 13,
+    zoomControl: true,
+  });
+
+  // OpenStreetMap 배경 레이어
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19,
+  }).addTo(map);
+
+  // 그리기 레이어 초기화
+  drawnItems = new L.FeatureGroup();
+  map.addLayer(drawnItems);
+
+  // Leaflet.draw 컨트롤
+  drawControl = new L.Control.Draw({
+    edit: {
+      featureGroup: drawnItems,
+    },
+    draw: {
+      polygon: {
+        allowIntersection: false,
+        showArea: true,
+        metric: true,
+        shapeOptions: {
+          color: '#64b5f6',
+          fillColor: '#1565c0',
+          fillOpacity: 0.2,
+          weight: 2,
+        },
+      },
+      rectangle: false,
+      circle: false,
+      circlemarker: false,
+      polyline: false,
+      marker: false,
+    },
+  });
+  map.addControl(drawControl);
+
+  // 그리기 이벤트 처리
+  map.on(L.Draw.Event.CREATED, function(e) {
+    drawnItems.clearLayers();
+    drawnItems.addLayer(e.layer);
+    currentBoundary = e.layer.toGeoJSON();
+    onBoundarySet(e.layer);
+  });
+
+  map.on(L.Draw.Event.EDITED, function(e) {
+    e.layers.eachLayer(function(layer) {
+      currentBoundary = layer.toGeoJSON();
+      onBoundarySet(layer);
+    });
+  });
+
+  map.on(L.Draw.Event.DELETED, function() {
+    currentBoundary = null;
+    document.getElementById('draw-hint').style.display = 'block';
+    document.getElementById('boundary-info').style.display = 'none';
+    document.getElementById('plan-btn').disabled = true;
+  });
+
+  // 좌표 표시
+  map.on('mousemove', function(e) {
+    document.getElementById('map-status').textContent =
+      `위도: ${e.latlng.lat.toFixed(6)}, 경도: ${e.latlng.lng.toFixed(6)}`;
+  });
+}
+
+function onBoundarySet(layer) {
+  // 면적 계산 (근사치, Leaflet이 WGS84 기준으로 계산)
+  const latlngs = layer.getLatLngs()[0];
+  let areaApprox = 0;
+  if (latlngs && latlngs.length > 2) {
+    // 간단한 면적 추정 (정확한 값은 서버에서 계산)
+    const bounds = layer.getBounds();
+    const w = bounds.getEast() - bounds.getWest();
+    const h = bounds.getNorth() - bounds.getSouth();
+    // 위도 1도 ≈ 111km, 경도 1도 ≈ 111km * cos(위도)
+    const lat = (bounds.getNorth() + bounds.getSouth()) / 2;
+    const wm = w * 111000 * Math.cos(lat * Math.PI / 180);
+    const hm = h * 111000;
+    areaApprox = wm * hm * 0.7; // 폴리곤이므로 보정
+  }
+
+  document.getElementById('draw-hint').style.display = 'none';
+  document.getElementById('boundary-info').style.display = 'block';
+  document.getElementById('boundary-area').textContent =
+    `추정 면적: ${(areaApprox / 10000).toFixed(2)} ha (서버에서 정확 계산)`;
+  document.getElementById('plan-btn').disabled = false;
+  document.getElementById('plan-error').style.display = 'none';
+}
+
+// ══════════════════════════════════════════════════════
+// 계획 수립
+// ══════════════════════════════════════════════════════
+async function startPlanning() {
+  if (!currentBoundary) {
+    showToast('먼저 대상지를 그려주세요.', 'error');
+    return;
+  }
+
+  // 입력값 수집
+  const params = {
+    site_name: document.getElementById('site-name').value || '테스트 구역',
+    development_type: document.getElementById('development-type').value,
+    program: document.getElementById('program').value,
+    region: document.getElementById('region').value,
+    transit_access: document.getElementById('transit-access').value,
+    target_population: parseInt(document.getElementById('target-population').value) || 0,
+    green_ratio_min: parseFloat(document.getElementById('green-ratio').value) / 100,
+    road_ratio_target: parseFloat(document.getElementById('road-ratio').value) / 100,
+    existing_roads: [],
+    preserve_areas: [],
+    slope_data: null,
+    adjacent_land_use: "주거",
+    priority: {
+      density: parseInt(document.getElementById('p-density').value),
+      green: parseInt(document.getElementById('p-green').value),
+      walkability: parseInt(document.getElementById('p-walk').value),
+      publicfacility: parseInt(document.getElementById('p-public').value),
+      traffic: parseInt(document.getElementById('p-traffic').value),
+    }
+  };
+
+  // 로딩 표시
+  showLoading(true);
+  document.getElementById('plan-btn').disabled = true;
+  document.getElementById('plan-error').style.display = 'none';
+
+  // 진행률 애니메이션
+  animateProgress();
+
+  try {
+    const response = await fetch('/api/plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        boundary_geojson: currentBoundary.geometry || currentBoundary,
+        design_params: params,
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail || '서버 오류가 발생했습니다.');
+    }
+
+    planResult = await response.json();
+
+    // 지도에 결과 표시
+    renderPlanOnMap(planResult);
+
+    // 결과 패널 업데이트
+    updateStatsPanel(planResult);
+    updateValidationPanel(planResult);
+    updateCasesPanel(planResult);
+    updateAltPanel(planResult);
+    updateReportPanel(planResult);
+
+    // 통계 탭으로 전환
+    switchTab('stats');
+
+    showToast('✅ 계획 수립 완료!', 'success');
+
+    // 지도 범위를 대상지에 맞춤
+    if (drawnItems.getLayers().length > 0) {
+      map.fitBounds(drawnItems.getBounds(), { padding: [30, 30] });
+    }
+
+  } catch (err) {
+    document.getElementById('plan-error').textContent = '⚠️ ' + err.message;
+    document.getElementById('plan-error').style.display = 'block';
+    showToast('계획 수립 실패: ' + err.message, 'error');
+  } finally {
+    showLoading(false);
+    document.getElementById('plan-btn').disabled = false;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// 지도 렌더링
+// ══════════════════════════════════════════════════════
+function renderPlanOnMap(result) {
+  // 기존 레이어 제거
+  Object.keys(layers).forEach(key => {
+    if (layers[key]) map.removeLayer(layers[key]);
+    layers[key] = L.layerGroup();
+  });
+
+  // 마스터플랜 (용도지역)
+  if (result.master_plan && result.master_plan.features) {
+    result.master_plan.features.forEach(f => {
+      const zoning = f.properties.zoning;
+      const color = ZONING_COLORS[zoning] || '#CCCCCC';
+      const geojsonLayer = L.geoJSON(f, {
+        style: {
+          fillColor: color,
+          fillOpacity: 0.65,
+          color: '#444',
+          weight: 0.8,
+        },
+      }).bindPopup(createZoningPopup(f.properties));
+      layers.masterplan.addLayer(geojsonLayer);
+    });
+  }
+
+  // 도로 폴리곤
+  if (result.road_polygons && result.road_polygons.features) {
+    result.road_polygons.features.forEach(f => {
+      const geojsonLayer = L.geoJSON(f, {
+        style: {
+          fillColor: '#888888',
+          fillOpacity: 0.85,
+          color: '#555',
+          weight: 0.5,
+        },
+      }).bindPopup(`<b>도로</b><br>폭원: ${f.properties.width_m}m<br>유형: ${f.properties.road_type}`);
+      layers.roads.addLayer(geojsonLayer);
+    });
+  }
+
+  // 블록
+  if (result.blocks && result.blocks.features) {
+    result.blocks.features.forEach(f => {
+      const zoning = f.properties.zoning;
+      const color = ZONING_COLORS[zoning] || '#CCCCCC';
+      const geojsonLayer = L.geoJSON(f, {
+        style: {
+          fillColor: color,
+          fillOpacity: 0.5,
+          color: '#333',
+          weight: 1,
+          dashArray: '4,3',
+        },
+      }).bindPopup(createBlockPopup(f.properties));
+      layers.blocks.addLayer(geojsonLayer);
+    });
+  }
+
+  // 공공시설
+  if (result.facilities && result.facilities.features) {
+    result.facilities.features.forEach(f => {
+      const facType = f.properties.facility_type;
+      const color = FACILITY_COLORS[facType] || '#4169E1';
+      const geojsonLayer = L.geoJSON(f, {
+        style: {
+          fillColor: color,
+          fillOpacity: 0.8,
+          color: 'white',
+          weight: 1.5,
+        },
+      }).bindPopup(createFacilityPopup(f.properties));
+      layers.facilities.addLayer(geojsonLayer);
+    });
+  }
+
+  // 지도에 추가
+  Object.keys(layers).forEach(key => {
+    if (layerVisible[key] && layers[key]) {
+      layers[key].addTo(map);
+    }
+    // 버튼 활성화
+    const btn = document.getElementById('btn-' + key);
+    if (btn) btn.style.borderColor = '#64b5f6';
+  });
+}
+
+// ── 팝업 생성 함수 ──────────────────────────────────
+
+function createZoningPopup(props) {
+  return `
+    <div class="popup-content">
+      <h3>📍 용도지역</h3>
+      <table class="popup-table">
+        <tr><td>용도지역</td><td><b>${props.zoning}</b></td></tr>
+        <tr><td>용적률 (최대)</td><td>${props.far_max}%</td></tr>
+        <tr><td>건폐율 (최대)</td><td>${props.bcr_max}%</td></tr>
+        <tr><td>면적</td><td>${(props.area_m2 / 10000).toFixed(3)} ha</td></tr>
+      </table>
+    </div>`;
+}
+
+function createBlockPopup(props) {
+  return `
+    <div class="popup-content">
+      <h3>🔲 블록 정보</h3>
+      <table class="popup-table">
+        <tr><td>블록 ID</td><td><b>${props.block_id}</b></td></tr>
+        <tr><td>용도지역</td><td>${props.zoning}</td></tr>
+        <tr><td>면적</td><td>${props.area_m2.toFixed(0)} m²</td></tr>
+        <tr><td>용적률</td><td>${props.far_max}%</td></tr>
+        <tr><td>건폐율</td><td>${props.bcr_max}%</td></tr>
+        <tr><td>최고높이</td><td>${props.max_height_m ? props.max_height_m + 'm' : '제한없음'}</td></tr>
+        <tr><td>도로접면</td><td>${props.adjacent_road_width_m}m</td></tr>
+        <tr><td>공공기여</td><td>${props.public_contribution ? '필요' : '불필요'}</td></tr>
+      </table>
+    </div>`;
+}
+
+function createFacilityPopup(props) {
+  return `
+    <div class="popup-content">
+      <h3>🏛️ ${props.facility_type}</h3>
+      <table class="popup-table">
+        <tr><td>시설 유형</td><td><b>${props.facility_type}</b></td></tr>
+        <tr><td>면적</td><td>${props.area_m2.toFixed(0)} m²</td></tr>
+        <tr><td>유치거리</td><td>${props.service_distance_m ? props.service_distance_m + 'm' : '제한없음'}</td></tr>
+      </table>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// 결과 패널 업데이트
+// ══════════════════════════════════════════════════════
+function updateStatsPanel(result) {
+  document.getElementById('stats-placeholder').style.display = 'none';
+  const content = document.getElementById('stats-content');
+  content.style.display = 'block';
+
+  const sa = result.site_analysis;
+  const stats = result.statistics;
+  const road = result.road_stats;
+  const est = result.estimates;
+
+  let html = `
+    <div class="card">
+      <div class="card-title">📐 대상지 개요</div>
+      <div class="stat-row"><span class="stat-label">면적</span><span class="stat-value">${(sa.area_m2/10000).toFixed(2)} ha (${sa.area_m2.toLocaleString()} m²)</span></div>
+      <div class="stat-row"><span class="stat-label">둘레</span><span class="stat-value">${sa.perimeter_m.toLocaleString()} m</span></div>
+      <div class="stat-row"><span class="stat-label">형상지수</span><span class="stat-value">${sa.shape_index} (원형=1.0)</span></div>
+      <div class="stat-row"><span class="stat-label">지형</span><span class="stat-value">${sa.terrain_type}</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🗺️ 용도별 면적</div>`;
+
+  if (stats && stats.area_by_category) {
+    const catLabels = {
+      "주거": "주거지역", "상업": "상업지역", "공업": "공업지역",
+      "녹지": "녹지", "공원녹지": "공원/녹지", "공원": "공원",
+      "공공": "공공시설", "도로": "도로", "기타": "기타"
+    };
+    Object.entries(stats.area_by_category).forEach(([cat, data]) => {
+      const label = catLabels[cat] || cat;
+      html += `<div class="stat-row">
+        <span class="stat-label">${label}</span>
+        <span class="stat-value">${(data.area_m2/10000).toFixed(3)} ha (${data.ratio_pct}%)</span>
+      </div>`;
+    });
+  }
+
+  html += `</div>
+
+    <div class="card">
+      <div class="card-title">👥 수용 능력</div>
+      <div class="stat-row"><span class="stat-label">예상 세대수</span><span class="stat-value good">${(est?.households || 0).toLocaleString()} 세대</span></div>
+      <div class="stat-row"><span class="stat-label">예상 인구</span><span class="stat-value good">${(est?.population || 0).toLocaleString()} 명</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🛣️ 도로망</div>
+      <div class="stat-row"><span class="stat-label">도로 연장</span><span class="stat-value">${road.total_length_m.toLocaleString()} m</span></div>
+      <div class="stat-row"><span class="stat-label">도로 면적</span><span class="stat-value">${(road.road_area_m2/10000).toFixed(3)} ha</span></div>
+      <div class="stat-row"><span class="stat-label">도로율</span><span class="stat-value ${road.road_ratio >= 0.2 && road.road_ratio <= 0.3 ? 'good' : 'warn'}">${(road.road_ratio * 100).toFixed(1)}%</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏛️ 공공시설</div>`;
+
+  if (result.facilities && result.facilities.features) {
+    const facCounts = {};
+    result.facilities.features.forEach(f => {
+      const t = f.properties.facility_type;
+      facCounts[t] = (facCounts[t] || 0) + 1;
+    });
+    Object.entries(facCounts).forEach(([t, cnt]) => {
+      html += `<div class="stat-row"><span class="stat-label">${t}</span><span class="stat-value">${cnt}개소</span></div>`;
+    });
+  }
+
+  const cov = result.coverage_analysis;
+  if (cov) {
+    html += `<div class="stat-row">
+      <span class="stat-label">공원 유치권 커버</span>
+      <span class="stat-value ${cov.park_coverage_ratio >= 0.8 ? 'good' : 'warn'}">${(cov.park_coverage_ratio * 100).toFixed(0)}%</span>
+    </div>`;
+  }
+
+  html += `</div>
+
+    <!-- 범례 -->
+    <div class="card">
+      <div class="card-title">🎨 용도지역 범례</div>`;
+
+  const legendItems = [
+    ["제1종일반주거", "#FFB6C1"], ["제2종일반주거", "#FF91A4"],
+    ["제3종일반주거", "#FF69B4"], ["준주거", "#DDA0DD"],
+    ["근린상업", "#FF8C00"], ["일반상업", "#FF6347"],
+    ["공원", "#90EE90"], ["자연녹지", "#7CFC00"],
+    ["공공시설", "#4169E1"], ["도로", "#AAAAAA"],
+  ];
+  legendItems.forEach(([label, color]) => {
+    html += `<div class="legend-item">
+      <div class="legend-color" style="background:${color}"></div>
+      <span class="legend-label">${label}</span>
+    </div>`;
+  });
+  html += `</div>`;
+
+  content.innerHTML = html;
+}
+
+function updateValidationPanel(result) {
+  document.getElementById('validation-placeholder').style.display = 'none';
+  const content = document.getElementById('validation-content');
+  content.style.display = 'block';
+
+  const v = result.validation;
+  const isValid = v.is_valid;
+  const reqPct = Math.round((v.required_pass / v.required_total) * 100);
+
+  let html = `
+    <div class="card">
+      <div class="card-title">종합 결과</div>
+      <div style="text-align:center; padding:8px 0;">
+        <div style="font-size:28px;">${isValid ? '✅' : '⚠️'}</div>
+        <div style="font-size:13px; color:${isValid ? '#81c784' : '#ffb74d'}; font-weight:700; margin-top:4px;">
+          ${isValid ? '법규 기준 충족' : '일부 항목 검토 필요'}
+        </div>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">필수기준 통과</span>
+        <span class="stat-value ${reqPct === 100 ? 'good' : reqPct >= 70 ? 'warn' : 'bad'}">${v.required_pass}/${v.required_total} (${reqPct}%)</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">권장기준 통과</span>
+        <span class="stat-value">${v.recommended_pass}/${v.recommended_total}</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">✅ 필수 검증 항목</div>`;
+
+  if (v.required_checks) {
+    v.required_checks.forEach(check => {
+      const icon = check.pass ? '✅' : '❌';
+      const cls = check.pass ? 'check-pass' : 'check-fail';
+      html += `<div class="check-item">
+        <span class="check-icon ${cls}">${icon}</span>
+        <div>
+          <div class="check-desc">${check.description}</div>
+          <div class="check-value">현재: ${check.value} / 기준: ${check.threshold}</div>
+        </div>
+      </div>`;
+    });
+  }
+
+  html += `</div>
+
+    <div class="card">
+      <div class="card-title">💡 권장 검증 항목</div>`;
+
+  if (v.recommended_checks) {
+    v.recommended_checks.forEach(check => {
+      const icon = check.pass ? '✅' : '⚠️';
+      const cls = check.pass ? 'check-pass' : 'check-warn';
+      html += `<div class="check-item">
+        <span class="check-icon ${cls}">${icon}</span>
+        <div>
+          <div class="check-desc">${check.description}</div>
+          <div class="check-value">현재: ${check.value} / 권장: ${check.threshold}</div>
+        </div>
+      </div>`;
+    });
+  }
+
+  if (v.issues && v.issues.length > 0) {
+    html += `</div><div class="card"><div class="card-title">🚨 개선 사항</div>`;
+    v.issues.forEach(issue => {
+      const icon = issue.level === 'error' ? '❌' : '⚠️';
+      html += `<div class="check-item">
+        <span class="check-icon">${icon}</span>
+        <div class="check-desc">${issue.message}</div>
+      </div>`;
+    });
+  }
+
+  html += `</div>`;
+  content.innerHTML = html;
+}
+
+function updateCasesPanel(result) {
+  document.getElementById('cases-placeholder').style.display = 'none';
+  const content = document.getElementById('cases-content');
+  content.style.display = 'block';
+
+  const cases = result.similar_cases || [];
+  let html = `<div style="font-size:11px; color:#78909c; margin-bottom:8px;">분석 결과와 유사한 사례 (유사도 순)</div>`;
+
+  cases.slice(0, 5).forEach((c, idx) => {
+    const pct = Math.round(c.similarity_score * 100);
+    html += `
+      <div class="case-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <div class="case-name">${idx + 1}. ${c.name}</div>
+            <div class="case-type">${c.type}</div>
+          </div>
+          <div class="case-similarity">유사도 ${pct}%</div>
+        </div>
+        <div class="case-stats">
+          <div class="case-stat">면적 <span>${c.area_ha} ha</span></div>
+          <div class="case-stat">인구 <span>${(c.population / 10000).toFixed(1)}만</span></div>
+          <div class="case-stat">평균FAR <span>${c.far_avg}%</span></div>
+        </div>
+        <div style="font-size:10px; color:#546e7a; margin-top:6px; border-top:1px solid #1a3a5c; padding-top:4px;">
+          💡 ${c.lessons}
+        </div>
+        <div style="font-size:10px; color:#78909c; margin-top:3px;">
+          도로패턴: ${c.road_pattern} | 블록크기: ${(c.avg_block_size_m2/10000).toFixed(3)} ha
+        </div>
+      </div>`;
+  });
+
+  content.innerHTML = html;
+}
+
+function updateAltPanel(result) {
+  document.getElementById('alt-placeholder').style.display = 'none';
+  const content = document.getElementById('alt-content');
+  content.style.display = 'block';
+
+  const alts = result.alternatives || {};
+  const labels = result.alternative_labels || {};
+
+  let html = `
+    <div class="alt-tabs">
+      <div class="alt-tab active" onclick="switchAlt('A', this)">A안 (균형)</div>
+      <div class="alt-tab" onclick="switchAlt('B', this)">B안 (고밀)</div>
+      <div class="alt-tab" onclick="switchAlt('C', this)">C안 (친환경)</div>
+    </div>`;
+
+  ['A', 'B', 'C'].forEach((key, i) => {
+    const plan = alts[key];
+    const label = labels[key] || `${key}안`;
+    const isActive = i === 0 ? 'active' : '';
+
+    html += `<div class="alt-content ${isActive}" id="alt-${key}">`;
+    html += `<div class="card"><div class="card-title">${label}</div>`;
+
+    if (plan && plan.properties && plan.properties.ratios) {
+      const ratios = plan.properties.ratios;
+      const ratioLabels = {
+        residential: '주거', commercial: '상업', industrial: '공업',
+        green: '녹지', public: '공공시설', road: '도로'
+      };
+      Object.entries(ratioLabels).forEach(([key, label]) => {
+        const val = ratios[key] || 0;
+        html += `<div class="stat-row">
+          <span class="stat-label">${label}</span>
+          <span class="stat-value">${(val * 100).toFixed(1)}%</span>
+        </div>`;
+      });
+    }
+
+    html += `</div>
+      <button class="btn btn-outline btn-sm" style="width:100%;"
+        onclick="renderAltPlan('${key}')">🗺️ ${label} 지도에 표시</button>
+    </div>`;
+  });
+
+  content.innerHTML = html;
+}
+
+function updateReportPanel(result) {
+  document.getElementById('report-placeholder').style.display = 'none';
+  const reportEl = document.getElementById('report-text');
+  reportEl.style.display = 'block';
+  reportEl.textContent = result.report_text || '리포트를 생성하는 중 오류가 발생했습니다.';
+}
+
+// ══════════════════════════════════════════════════════
+// 레이어 토글
+// ══════════════════════════════════════════════════════
+function toggleLayer(name) {
+  if (!layers[name]) return;
+  layerVisible[name] = !layerVisible[name];
+  const btn = document.getElementById('btn-' + name);
+
+  if (layerVisible[name]) {
+    layers[name].addTo(map);
+    if (btn) btn.style.borderColor = '#64b5f6';
+  } else {
+    map.removeLayer(layers[name]);
+    if (btn) btn.style.borderColor = '#2d4a6e';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// 대안 표시
+// ══════════════════════════════════════════════════════
+function switchAlt(key, el) {
+  document.querySelectorAll('.alt-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.alt-content').forEach(c => c.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const content = document.getElementById('alt-' + key);
+  if (content) content.classList.add('active');
+}
+
+function renderAltPlan(key) {
+  if (!planResult || !planResult.alternatives) return;
+  const altPlan = planResult.alternatives[key];
+  if (!altPlan || !altPlan.features) return;
+
+  // 마스터플랜 레이어 교체
+  if (layers.masterplan) map.removeLayer(layers.masterplan);
+  layers.masterplan = L.layerGroup();
+
+  altPlan.features.forEach(f => {
+    const zoning = f.properties.zoning;
+    const color = ZONING_COLORS[zoning] || '#CCCCCC';
+    L.geoJSON(f, {
+      style: { fillColor: color, fillOpacity: 0.65, color: '#444', weight: 0.8 },
+    }).bindPopup(createZoningPopup(f.properties))
+      .addTo(layers.masterplan);
+  });
+
+  if (layerVisible.masterplan) layers.masterplan.addTo(map);
+  showToast(`${key}안을 지도에 표시했습니다.`, 'success');
+}
+
+// ══════════════════════════════════════════════════════
+// 내보내기
+// ══════════════════════════════════════════════════════
+async function exportPlan(format) {
+  try {
+    const response = await fetch(`/api/export/${format}`);
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail || '내보내기 실패');
+    }
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = format === 'geojson' ? 'urban_plan.geojson' : 'urban_plan.png';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast(`${format.toUpperCase()} 내보내기 완료`, 'success');
+  } catch (err) {
+    showToast('내보내기 실패: ' + err.message, 'error');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// UI 유틸리티
+// ══════════════════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const tabNames = ['stats', 'validation', 'cases', 'alt', 'report'];
+    t.classList.toggle('active', tabNames[i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  const target = document.getElementById('tab-' + name);
+  if (target) target.classList.add('active');
+}
+
+function updatePVal(key, val) {
+  document.getElementById('v-' + key).textContent = val;
+}
+
+function showLoading(show) {
+  const el = document.getElementById('loading');
+  if (show) el.classList.add('show');
+  else el.classList.remove('show');
+}
+
+function animateProgress() {
+  const bar = document.getElementById('progress-bar');
+  const steps = [
+    [10, 300], [25, 800], [45, 1500], [65, 2200], [85, 3000], [95, 3500]
+  ];
+  steps.forEach(([pct, delay]) => {
+    setTimeout(() => { bar.style.width = pct + '%'; }, delay);
+  });
+}
+
+let toastTimer = null;
+function showToast(msg, type = '') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'show' + (type ? ' ' + type : '');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { toast.className = ''; }, 3000);
+}
+
+function resetAll() {
+  // 레이어 초기화
+  Object.keys(layers).forEach(key => {
+    if (layers[key]) map.removeLayer(layers[key]);
+    layers[key] = null;
+  });
+
+  // 그린 폴리곤 초기화
+  drawnItems.clearLayers();
+  currentBoundary = null;
+  planResult = null;
+
+  // UI 초기화
+  document.getElementById('draw-hint').style.display = 'block';
+  document.getElementById('boundary-info').style.display = 'none';
+  document.getElementById('plan-btn').disabled = true;
+  document.getElementById('plan-error').style.display = 'none';
+
+  // 결과 패널 초기화
+  ['stats', 'validation', 'cases', 'alt'].forEach(tab => {
+    const ph = document.getElementById(tab + '-placeholder');
+    const ct = document.getElementById(tab + '-content');
+    if (ph) ph.style.display = 'block';
+    if (ct) ct.style.display = 'none';
+  });
+  document.getElementById('report-placeholder').style.display = 'block';
+  document.getElementById('report-text').style.display = 'none';
+
+  switchTab('stats');
+  showToast('초기화 완료', 'success');
+}
+
+// ══════════════════════════════════════════════════════
+// 초기화
+// ══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+  initMap();
+  // 로딩 진행률 초기화
+  document.getElementById('progress-bar').style.width = '0%';
+});
+</script>
+</body>
+</html>

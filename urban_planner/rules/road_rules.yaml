@@ -1,0 +1,165 @@
+# 도로 설계 기준 (도로법 + 도시계획시설 결정 기준)
+
+# 도로 위계별 규격
+road_hierarchy:
+  광로1류:
+    code: A1
+    width_min: 70
+    width_typical: 80
+    description: "70m 이상"
+    function: "광역간선"
+    design_speed: 80
+
+  광로2류:
+    code: A2
+    width_min: 50
+    width_max: 70
+    width_typical: 60
+    description: "50~70m"
+    function: "광역간선"
+    design_speed: 70
+
+  광로3류:
+    code: A3
+    width_min: 40
+    width_max: 50
+    width_typical: 45
+    description: "40~50m"
+    function: "광역간선"
+    design_speed: 60
+
+  대로1류:
+    code: B1
+    width_min: 35
+    width_max: 40
+    width_typical: 35
+    description: "35~40m"
+    function: "주간선"
+    design_speed: 60
+
+  대로2류:
+    code: B2
+    width_min: 30
+    width_max: 35
+    width_typical: 30
+    description: "30~35m"
+    function: "주간선"
+    design_speed: 60
+
+  대로3류:
+    code: B3
+    width_min: 25
+    width_max: 30
+    width_typical: 25
+    description: "25~30m"
+    function: "주간선"
+    design_speed: 50
+
+  중로1류:
+    code: C1
+    width_min: 20
+    width_max: 25
+    width_typical: 20
+    description: "20~25m"
+    function: "보조간선"
+    design_speed: 50
+
+  중로2류:
+    code: C2
+    width_min: 15
+    width_max: 20
+    width_typical: 15
+    description: "15~20m"
+    function: "보조간선"
+    design_speed: 40
+
+  중로3류:
+    code: C3
+    width_min: 12
+    width_max: 15
+    width_typical: 12
+    description: "12~15m"
+    function: "보조간선"
+    design_speed: 40
+
+  소로1류:
+    code: D1
+    width_min: 10
+    width_max: 12
+    width_typical: 10
+    description: "10~12m"
+    function: "국지"
+    design_speed: 30
+
+  소로2류:
+    code: D2
+    width_min: 8
+    width_max: 10
+    width_typical: 8
+    description: "8~10m"
+    function: "국지"
+    design_speed: 30
+
+  소로3류:
+    code: D3
+    width_min: 6
+    width_max: 8
+    width_typical: 6
+    description: "6~8m"
+    function: "국지"
+    design_speed: 20
+
+  세로막힌:
+    code: E1
+    width_min: 4
+    width_typical: 4
+    description: "4m 이상 (막힌도로)"
+    function: "접근"
+    design_speed: 10
+    max_length: 35          # 35m 초과 시 회전광장 필요
+    turnaround_diameter: 12 # 회전광장 지름 (m)
+
+# 도로율 기준 (지구단위계획)
+road_ratio:
+  min: 0.20    # 최소 도로율
+  max: 0.30    # 최대 도로율 (권장)
+  target: 0.25 # 목표 도로율
+
+# 블록 간격 기준 (보조간선도로 간격)
+block_spacing:
+  min_m: 200    # 최소 블록 간격
+  max_m: 400    # 최대 블록 간격
+  typical_m: 300
+
+# 보행자 전용도로
+pedestrian_road:
+  max_service_distance: 250  # 250m 이내 배치
+  min_width: 3               # 최소 폭원 (m)
+  typical_width: 5
+
+# 도로 교차로 기준
+intersection:
+  min_angle_deg: 60          # 최소 교차각도
+  corner_cutoff_m: 5         # 모서리 절취 (소로)
+  corner_cutoff_arterial_m: 10  # 모서리 절취 (간선)
+
+# 프로그램별 도로망 패턴 권장
+road_pattern_by_type:
+  신규개발:
+    flat: "격자형"
+    sloped: "유기형"
+  재개발:
+    all: "기존도로 활용"
+  재건축:
+    all: "기존도로 유지"
+  도시재생:
+    all: "기존도로 보완"
+
+# 도로망 밀도 기준 (km/km²)
+road_density:
+  min: 6.0
+  max: 10.0
+  by_type:
+    신도시: 8.5
+    재개발: 7.5
+    도시재생: 7.0

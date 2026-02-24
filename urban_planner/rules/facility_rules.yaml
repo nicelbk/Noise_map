@@ -1,0 +1,132 @@
+# 공공시설 배치 기준 (도시공원 및 녹지 등에 관한 법률 + 도시계획시설 기준)
+
+# 공원 기준
+parks:
+  소공원:
+    code: SP
+    min_area_m2: 500
+    service_distance_m: null    # 제한 없음
+    color: "#98FB98"
+    description: "소규모 공원, 유치거리 제한 없음"
+
+  어린이공원:
+    code: CP
+    min_area_m2: 1500
+    service_distance_m: 250     # 유치거리 250m 이하
+    color: "#90EE90"
+    description: "어린이 놀이터 중심"
+    placement_rules:
+      - "주거지역 내 배치 우선"
+      - "간선도로 직접 접하지 않음"
+      - "안전한 보행접근 확보"
+
+  근린공원:
+    code: NP
+    min_area_m2: 10000
+    service_distance_m: 500     # 유치거리 500m 이하
+    color: "#32CD32"
+    description: "근린주거구역 서비스"
+    placement_rules:
+      - "대상지당 최소 1개소"
+      - "주거지역 인접"
+
+  문화공원:
+    code: CUP
+    min_area_m2: 2000
+    service_distance_m: null    # 제한 없음
+    color: "#228B22"
+    description: "문화·예술 기능"
+
+# 학교 기준
+schools:
+  초등학교:
+    code: ES
+    households_per_unit: 500    # 500세대당 1개소
+    service_distance_m: 500     # 유치거리 500m
+    min_area_m2_per_class: 660  # 학급당 면적
+    typical_classes: 18         # 표준 학급 수
+    color: "#4169E1"
+    placement_rules:
+      - "통학로 간선도로 횡단 최소화"
+      - "어린이 보행 안전 확보"
+      - "주거지역 중심부 배치"
+
+  중학교:
+    code: MS
+    households_per_unit: 2000   # 2000세대당 1개소
+    service_distance_m: 1000
+    min_area_m2_per_class: 900  # 학급당 면적
+    typical_classes: 24
+    color: "#1E90FF"
+    placement_rules:
+      - "주거지역 접근 용이한 위치"
+
+  고등학교:
+    code: HS
+    households_per_unit: 3000
+    service_distance_m: 1500
+    min_area_m2_per_class: 1000
+    typical_classes: 24
+    color: "#6495ED"
+    placement_rules:
+      - "주거지역 또는 인접지"
+
+# 주민편의시설
+community_facilities:
+  주민센터:
+    code: CC
+    households_per_unit: 3000
+    min_area_m2: 1000
+    color: "#9370DB"
+    placement_rules:
+      - "접근성 좋은 중심부"
+      - "대중교통 접근 가능"
+
+  도서관:
+    code: LB
+    households_per_unit: 5000
+    min_area_m2: 2000
+    color: "#8A2BE2"
+
+  보건소:
+    code: HC
+    households_per_unit: 10000
+    min_area_m2: 1500
+    color: "#FF4500"
+
+# 주차 수요 기준 (주차장법 시행령)
+parking_demand:
+  공동주택:
+    unit: "세대"
+    ratio: 1.0              # 세대당 1대
+    small_unit_ratio: 0.7   # 전용 60m² 이하: 0.7대
+
+  근린생활시설:
+    unit: "m2"
+    ratio: 134              # 시설면적 134m²당 1대
+
+  판매시설:
+    unit: "m2"
+    ratio: 150              # 시설면적 150m²당 1대
+
+  업무시설:
+    unit: "m2"
+    ratio: 200              # 시설면적 200m²당 1대
+
+  의료시설:
+    unit: "m2"
+    ratio: 200
+
+# 인구 추정 기준
+population_estimation:
+  공동주택_세대당_인원: 2.5     # 세대당 평균 거주인원
+  평균_세대면적_m2: 84          # 평균 세대 전용면적
+  주거용도_거주비율: 0.85        # 주거지역 중 실거주 비율
+  상업_고용밀도_명per100m2: 5   # 상업지역 100m²당 고용인구
+  공업_고용밀도_명per100m2: 3   # 공업지역 100m²당 고용인구
+
+# 녹지 기준 (지구단위계획)
+green_standards:
+  min_ratio: 0.10           # 최소 녹지율 10%
+  recommended_ratio: 0.15   # 권장 녹지율 15%
+  park_coverage_target: 0.90  # 공원 유치권 내 주거 커버 목표
